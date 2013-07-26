@@ -284,4 +284,4 @@ class World(Loader):
         if (old_chunk_pos[0] == new_chunk_pos[0]) or (old_chunk_pos[1] == new_chunk_pos[1]):
             return
         self.unregister_entity(entity, old_x, old_y)
-        self.register_entity(entity, new_x, new_y)
+        self.register_entity_at(entity, new_x, new_y)

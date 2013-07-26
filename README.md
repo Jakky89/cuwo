@@ -128,9 +128,13 @@ Perl - protocol RE
 
 ZeZeene - web interface for master server
 
-Somer - help with some protocol variables
+Kyle - master server JS
 
 Kainzo - Testing
+
+uwee - protocol variables
+
+Somer - help with some protocol variables
 
 Favorlock - scripting and commands
 
