@@ -42,11 +42,9 @@ there, and has features like
 
 World/Sector/Chunk organization
 ===============================
-* Each world in Cube World contains sectors and each sector contains chunks
-* Entities are saved in chunk object
-* Chunks are saved in sector object
-* Sectors are saved in world object
-* 3-step targeting (world -> sector -> chunk) for increasing performance on target/destination searching
+* Each world in Cube World contains sectors and chunks
+* Entities are saved in chunk objects
+* Chunks are saved in world object
 
 
 Direction-Coordinate-Delta-Matrix

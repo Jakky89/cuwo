@@ -133,6 +133,7 @@ class Chunk(object):
         self.sector = sector
         self.chunk_x = cx
         self.chunk_y = cy
+        self.item_list = []
         self.locatables = {}
 
     def is_in_chunk(self, px, py):
@@ -175,7 +176,6 @@ class Sector(object):
         self.world = world
         self.sector_x = sx
         self.sector_y = sy
-        self.chunks = {}
 
     def is_in_sector(self, px, py):
         mmp = get_scaled_xy( px, py, constants.SECTOR_SCALE )
@@ -183,70 +183,32 @@ class Sector(object):
             return True
         return False
 
+
+class World(object):
+    def __init__(self, server, name=None):
+        self.server = server
+        self.name = name
+        self.chunks = {}
+        self.sectors = {}
+        self.locatables = {}
+
     def get_chunk_unscaled(self, cx, cy):
+        cx = math.floor(cx)
+        cy = math.floor(cy)
         chnk = None
         try:
             chnk = self.chunks[(cx, cy)]
-        except:
+        except KeyError:
             pass
         if not chnk:
             chnk = Chunk(self, cx, cy)
             self.chunks[(cx, cy)] = chnk
         return chnk
 
-    def get_chunk_scaled(self, px, py):
-        return self.get_chunk_unscaled( math.floor( px / constants.CHUNK_SCALE),
-                                        math.floor( py / constants.CHUNK_SCALE))
-
-    # 2 step targeting (WorldSector -> WorldChunks)
-    # Returns locatables within max_distance
-    def get_locatables(self, lx, ly, lz, max_distance=3):
-        locatables = set()
-        # scale down to chunks
-        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.CHUNK_SCALE )
-        # loop through chunks in within scaled max_distance
-        for cx in range(rngs[0], rngs[1]):
-            for cy in range(rngs[2], rngs[3]):
-                # get closest locatables in current sector and add them to locatables set
-                nlc = self.get_chunk_unscaled(cx, cy).get_locatables( lx, ly, lz, max_distance )
-                if not nlc:
-                    continue
-                locatables.update(nlc)
-        return locatables
-
-    # Returns single closest locatable within max_distance
-    def get_locatable(self, lx, ly, lz, max_distance=3):
-        locatables = set()
-        # scale down to chunks
-        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.CHUNK_SCALE )
-        # loop through sectors in within scaled max_distance
-        for cx in range(rngs[0], rngs[1]):
-            for cy in range(rngs[2], rngs[3]):
-                # get closest locatables in current sector and add them to locatables set
-                lcn = self.get_chunk_unscaled(cx, cy).get_locatable( lx, ly, lz, max_distance )
-                if not lcn:
-                    continue
-                locatables.add(lcn)
-        if len(locatables) < 1:
-            return None
-        return get_closest_locatable( iter(locatables), lx, ly, lz, max_distance )
-
-    def register(self, x, y, z, id, obj=None):
-        return self.get_chunk_scaled(x, y).register(x, y, z, id, obj)
-
-    def unregister(self, x, y, id):
-        return self.get_chunk_scaled(x, y).unregister(id)
-
-
-class World(object):
-    def __init__(self, server, name=None):
-        self.server = server
-        self.name = name
-        self.sectors = {}
-        self.locatables = {}
-
     # Get sector at sector position
     def get_sector_unscaled(self, sx, sy):
+        sx = math.floor(sx)
+        sy = math.floor(sy)
         secp = None
         try:
             secp = self.sectors[(sx, sy)]
@@ -257,59 +219,64 @@ class World(object):
             self.sectors[(sx, sy)] = secp
         return secp
 
-    # Get sector at chunk position
-    def get_chunk_sector(self, cx, cy):
-        return self.get_sector_unscaled( math.floor( (cx * constants.CHUNK_SCALE) / constants.SECTOR_SCALE),
-                                         math.floor( (cy * constants.CHUNK_SCALE) / constants.SECTOR_SCALE))
+    def get_chunk_scaled(self, px, py):
+        return self.get_chunk_unscaled(math.floor( px / constants.CHUNK_SCALE),
+                                       math.floor( py / constants.CHUNK_SCALE))
 
     # Get sector at x y position
     def get_sector_scaled(self, px, py):
         return self.get_sector_unscaled( math.floor( px / constants.SECTOR_SCALE),
                                          math.floor( py / constants.SECTOR_SCALE))
 
+    # Get sector at chunk position
+    def get_chunk_sector(self, cx, cy):
+        return self.get_sector_unscaled( math.floor( (cx * constants.CHUNK_SCALE) / constants.SECTOR_SCALE),
+                                         math.floor( (cy * constants.CHUNK_SCALE) / constants.SECTOR_SCALE))
+
     # 3 step targeting (World -> WorldSectors -> WorldChunks)
     # Returns locatables within max_distance
-    def get_locatables(self, lx, ly, lz, max_distance=3):
+    def get_locatables(self, x, y, z, max_distance=3):
         locatables = set()
-        # scale down to sectors
-        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.SECTOR_SCALE )
-        # loop through sectors in within scaled max_distance
-        for sx in range(rngs[0], rngs[1]):
-            for sy in range(rngs[2], rngs[3]):
+        # scale down to chunks
+        rngs = get_scaled_min_max_xy( x, y, max_distance, constants.CHUNK_SCALE )
+        # loop through chunks in within scaled max_distance
+        for cx in range(rngs[0], rngs[1]):
+            for cy in range(rngs[2], rngs[3]):
                 # get closest locatables in current sector and add them to locatables set
-                lns = self.get_sector_unscaled(sx, sy).get_locatables( lx, ly, lz, max_distance )
-                if not lns:
+                lcs = self.get_chunk_unscaled(cx, cy).get_locatables( x, y, z, max_distance )
+                if not lcs:
                     continue
-                locatables.update(lns)
+                locatables.update(lcs)
         return locatables
 
     # Returns single closest locatable within max_distance
-    def get_locatable(self, lx, ly, lz, max_distance=3):
+    def get_locatable(self, x, y, z, max_distance=3):
         locatables = set()
-        # scale down to sectors
-        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.SECTOR_SCALE )
-        # loop through sectors in within scaled max_distance
-        for sx in range(rngs[0], rngs[1]):
-            for sy in range(rngs[2], rngs[3]):
-                # get closest locatables in current sector and add them to locatables set
-                lns = self.get_sector_unscaled(sx, sy).get_locatable( lx, ly, lz, max_distance )
-                if not lns:
+        # scale down to chunks
+        rngs = get_scaled_min_max_xy( x, y, max_distance, constants.CHUNK_SCALE )
+        # loop through chunks in within scaled max_distance
+        for cx in range(rngs[0], rngs[1]):
+            for cy in range(rngs[2], rngs[3]):
+                # get closest locatables in current chunk and add to locatables set
+                lcs = self.get_chunk_unscaled(cx, cy).get_locatable( x, y, z, max_distance )
+                if not lcs:
                     continue
-                locatables.add(lns)
+                locatables.add(lcs)
         if len(locatables) < 1:
             return None
-        return get_closest_locatable( iter(locatables), lx, ly, lz, max_distance )
+        return get_closest_locatable( iter(locatables), x, y, z, max_distance )
 
     def register(self, x, y, z, id, obj=None):
-        lct = self.get_sector_scaled(x, y).register(x, y, z, id, obj)
+        lct = self.get_chunk_scaled(x, y).register(x, y, z, id, obj)
         self.locatables[id] = lct
+        return lct
 
     def unregister(self, id):
-        if id in self.locatables:
-            ret = self.locatables.pop(id)
-            if ret:
-                return self.get_sector_scaled(x, y).unregister(ret.x, ret.y, id)
-        return None
+        ret = self.locatables.pop(id, None)
+        if not ret:
+            return None
+        return self.get_chunk_scaled(ret.x, ret.y).unregister(id)
+
 
     # unregisters from old chunk and registers in new
     # chunk only when moved from one chunk to another

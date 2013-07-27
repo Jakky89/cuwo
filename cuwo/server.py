@@ -270,27 +270,25 @@ class CubeWorldConnection(Protocol):
         interact_type = packet.interact_type
         pos = self.position
         pos.z -= constants.BLOCK_SCALE
-        res = self.scripts.call('on_interact', type=interact_type, pos=pos).result
+        res = self.scripts.call('on_interact', interact_type=interact_type).result
         if res is False:
             return
         if interact_type == constants.INTERACT_DROP:
-            item = packet.item_data
-            res = self.scripts.call('on_drop', item=item, pos=pos).result
+            res = self.scripts.call('on_drop', item_data=packet.item_data).result
             if res is False:
                 return
-            self.server.drop_item(item, pos)
+            self.server.drop_item(packet.item_data, pos)
         elif interact_type == constants.INTERACT_PICKUP:
-            item = packet.item_data
-            res = self.scripts.call('on_pickup', item=item, pos=pos).result
+            res = self.scripts.call('on_pickup', item_data=packet.item_data).result
             if res is False:
                 return
-            chunk = (packet.chunk_x, packet.chunk_y)
             try:
-                item = self.server.remove_item(chunk, packet.item_index)
+                item = self.server.remove_item(packet.chunk_x, packet.chunk_y, packet.item_index)
+                if not item:
+                    return
                 self.give_item(item)
             except KeyError:
                 pass
-        self.server.broadcast_packet(packet)
 
     def on_hit_packet(self, packet):
         try:
@@ -338,7 +336,7 @@ class CubeWorldConnection(Protocol):
             return False
         if not self.check_name():
             return True
-        if not check_pos():
+        if not self.check_pos():
             return True
         self.last_pos = self.position
         if self.entity_data.entity_type < constants.ENTITY_TYPE_PLAYER_MIN_ID or self.entity_data.entity_type > constants.ENTITY_TYPE_PLAYER_MAX_ID:
@@ -358,7 +356,7 @@ class CubeWorldConnection(Protocol):
             print '[ANTICHEAT BASE] Player %s tried to join with an abnormal character level! Kicked.' % self.name
             return True
         # This seems to filter prevent cheaters from joining
-        needed_xp = get_needed_total_xp(self.entity_data.level)
+        needed_xp = common.get_needed_total_xp(self.entity_data.level)
         if needed_xp > self.entity_data.current_xp:
             self.kick('Invalid character level')
             print '[ANTICHEAT BASE] Player %s tried to join with character level %s that is higher than total xp needed (%s/%s)! Kicked.' % (self.name, self.entity_data.level, self.entity_data.current_xp, needed_xp)
@@ -639,7 +637,6 @@ class CubeWorldConnection(Protocol):
 
 class CubeWorldServer(Factory):
     exit_code = 0
-    items_changed = False
     last_secondly_check = None
     ticks_since_last_second = 25
     ticks_per_second = 25
@@ -657,7 +654,6 @@ class CubeWorldServer(Factory):
         self.players = MultikeyDict()
 
         self.chunk_items = collections.defaultdict(list)
-        self.entities = {}
         self.entity_ids = IDPool(1)
 
         # DATABASE
@@ -706,29 +702,31 @@ class CubeWorldServer(Factory):
             return False
         return CubeWorldConnection(self, addr)
 
-    def remove_item(self, chunk, index):
-        items = self.chunk_items[chunk]
-        ret = items.pop(index)
-        self.worlds[0].unregister(ret.pos.x, ret.pos.y, ret.entity_id)
-        self.server.entity_ids.put_back(ret.entity_id)
-        self.broadcast_chunkitems()
+    def remove_item(self, chunk_x, chunk_y, index):
+        items = self.world.get_chunk_unscaled(chunk_x, chunk_y).item_list
+        if not items:
+            return None
+        ret = items.pop(index, None)
+        if ret:
+            self.broadcast_chunkitems()
+            return ret
+        return None
 
-    def drop_item(self, item_data, pos, lifetime=None):
-        chunk_items = self.chunk_items[get_chunk(pos)]
+    def drop_item(self, item_data, pos):
+        chunk_items = self.world.get_chunk_scaled(pos.x, pos.y).item_list
         if len(chunk_items) > constants.MAX_ITEMS_PER_CHUNK:
-            print '[WARNING] To many items at %s !' % cpos
+            print '[WARNING] To many items at Chunk(%s,%s)!' % (math.floor(pos.x / constants.CHUNK_SCALE), math.floor(pos.y / constants.CHUNK_SCALE))
             return False
         item = ChunkItemData()
+        item.pos = pos
         item.drop_time = 750
         item.scale = 0.1
         item.rotation = 185.0
         item.something3 = item.something5 = item.something6 = 0
-        item.pos = pos
         item.item_data = item_data
-        item.entity_id = server.entity_ids.pop()
         chunk_items.append(item)
-        self.worlds[0].register(pos.x, pos.y, pos.z, item.entity_id, item)
         self.broadcast_chunkitems()
+        return item
 
     def update(self):
         uxtime = int(reactor.seconds())
@@ -795,19 +793,13 @@ class CubeWorldServer(Factory):
 
     def broadcast_chunkitems(self):
         update_packet = self.update_packet
-        if self.items_changed:
-            for chunk, items in self.chunk_items.iteritems():
-                item_list = ChunkItems()
-                item_list.chunk_x, item_list.chunk_y = chunk
-                item_list.items = items
-                update_packet.chunk_items.append(item_list)
+        for chunk, items in self.chunk_items.iteritems():
+            item_list = ChunkItems()
+            item_list.chunk_x, item_list.chunk_y = chunk
+            item_list.items = items
+            update_packet.chunk_items.append(item_list)
         self.broadcast_packet(update_packet)
         update_packet.reset()
-        # reset drop times
-        if self.items_changed:
-            for items in self.chunk_items.values():
-                for item in items:
-                    item.drop_time = 0
 
     def broadcast_packet(self, packet):
         data = write_packet(packet)
