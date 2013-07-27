@@ -304,8 +304,12 @@ class World(object):
         lct = self.get_sector_scaled(x, y).register(x, y, z, id, obj)
         self.locatables[id] = lct
 
-    def unregister(self, x, y, id):
-        return self.get_sector_scaled(x, y).unregister(x, y, id)
+    def unregister(self, id):
+        if id in self.locatables:
+            ret = self.locatables.pop(id)
+            if ret:
+                return self.get_sector_scaled(x, y).unregister(ret.x, ret.y, id)
+        return None
 
     # unregisters from old chunk and registers in new
     # chunk only when moved from one chunk to another

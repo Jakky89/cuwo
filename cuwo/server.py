@@ -107,7 +107,7 @@ class CubeWorldConnection(Protocol):
             print '[WARNING] Connection of %s denied.' % self.address.host
             return
         server = self.server
-        if len(server.connections) >= server.config.base.max_players:
+        if len(server.connections) >= self.server.config.base.max_players:
             # For being able to allow joining by external scritps although server is full
             ret = self.scripts.call('on_join_full_server').result
             if ret is not True:
@@ -151,7 +151,7 @@ class CubeWorldConnection(Protocol):
             print '[INFO] Player %s left the game.' % self.name
             self.server.send_chat('<<< %s left the game' % self.name)
         if self.entity_id is not None:
-            self.server.worlds[self.world_index].unregister(self.position.x, self.position.y, self.entity_id)
+            self.server.worlds[self.world_index].unregister(self.entity_id)
             del self.server.entities[self.entity_id]
             self.server.entity_ids.put_back(self.entity_id)
         if self.scripts is not None:
@@ -190,7 +190,7 @@ class CubeWorldConnection(Protocol):
         self.entity_id = server.entity_ids.pop()
         join_packet.entity_id = self.entity_id
         self.send_packet(join_packet)
-        seed_packet.seed = server.config.base.seed
+        seed_packet.seed = self.server.config.base.seed
         self.send_packet(seed_packet)
 
     def on_entity_packet(self, packet):
@@ -246,7 +246,7 @@ class CubeWorldConnection(Protocol):
                 # As we do not want to spam back only do this when
                 # burst limit is reached for the first time
                 if self.chat_messages_burst == constants.ANTISPAM_BURST_CHAT:
-                    if config.auto_kick_spam:
+                    if self.server.config.base.auto_kick_spam:
                         self.kick('Kicked for chat spamming')
                     else:
                         self.send_chat('[ANTISPAM] Please do not spam in chat!')
@@ -334,9 +334,9 @@ class CubeWorldConnection(Protocol):
 
 
     def do_anticheat_actions(self):
-        if not constants.ANTICHEAT_SYSTEM_ENABLED:
+        if not self.server.config.base.cheat_prevention:
             return False
-        if not check_name():
+        if not self.check_name():
             return True
         if not check_pos():
             return True
@@ -390,13 +390,13 @@ class CubeWorldConnection(Protocol):
             print '[WARNING] Joining client %s blocked by script!' % self.address.host
             return
         self.connection_state = 1
-        if self.entity_data.level < config.base.join_level_min:
-            print '[WARNING] Level of player %s #%s (%s) [%s] is lower than minimum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, config.base.join_level_min)
-            self.kick('Your level has to be at least %s' % config.base.join_level_min)
+        if self.entity_data.level < self.server.config.base.join_level_min:
+            print '[WARNING] Level of player %s #%s (%s) [%s] is lower than minimum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, self.server.config.base.join_level_min)
+            self.kick('Your level has to be at least %s' % self.server.config.base.join_level_min)
             return
-        if self.entity_data.level > config.base.join_level_max:
-            print '[WARNING] Level of player %s #%s (%s) [%s] is higher than maximum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, config.base.join_level_max)
-            self.kick('Your level has to be lower than %s' % config.base.join_level_max)
+        if self.entity_data.level > self.server.config.base.join_level_max:
+            print '[WARNING] Level of player %s #%s (%s) [%s] is higher than maximum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, self.server.config.base.join_level_max)
+            self.kick('Your level has to be lower than %s' % self.server.config.base.join_level_max)
             return
         self.last_pos = self.position
         # we dont want cheaters being able joining the server
@@ -569,7 +569,7 @@ class CubeWorldConnection(Protocol):
             self.kick('Name to short')
             print '[WARNING] %s had name shorter than %s characters! Kicked.' % (self.address.host, constants.NAME_LENGTH_MIN)
             return False
-        if re.search(server.config.base.name_filter, self.name) is None:
+        if re.search(self.server.config.base.name_filter, self.name) is None:
             self.kick('Illegal name')
             print '[WARNING] %s had illegal name! Kicked.' % self.address.host
             return False
@@ -612,7 +612,7 @@ class CubeWorldConnection(Protocol):
                 self.kick('Illegal item')
                 print '[INFO] Player %s #%s (%s) [%s] had item with level lover than 0' % (self.entity_data.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host)
                 return False
-            if item.material in server.config.base.forbid_item_possession:
+            if item.material in self.server.config.base.forbid_item_possession:
                 self.kick('Forbidden item')
                 print '[INFO] Player %s #%s (%s) [%s] had forbidden item #%s' % (self.entity_data.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, item.material)
                 return False

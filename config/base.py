@@ -56,8 +56,9 @@ spam_protection = True
 
 grief_protection = True
 
-# Very basic but low-ressource cheat protections (maybe use an additional and more advanced anticheat script)
-cheat_protection = True
+# Very basic but low-ressource cheat preventions
+# like range/name checks, overpowered stats etc.
+cheat_prevention = True
 
 # Denial of Service protection (better use hardware doing this job)
 protection_dos = True
