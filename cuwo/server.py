@@ -83,14 +83,14 @@ class CubeWorldConnection(Protocol):
     old_xp = None
 
     # used for anti chat spamming
-    time_last_chat    = None
+    time_last_chat      = 0
     chat_messages_burst = 0
 
     # used for detecting dead connections
-    time_last_packet = None
-    time_last_rate = None
+    time_last_packet = 0
+    time_last_rate = 0
     packet_count = 0
-    packet_rate = 10
+    packet_rate = 0
     # used for basic DoS protection
     packet_burst = 0
 
@@ -136,13 +136,6 @@ class CubeWorldConnection(Protocol):
 
     def dataReceived(self, data):
         self.packet_handler.feed(data)
-        self.time_last_packet = reactor.seconds()
-        if self.time_last_rate == self.time_last_packet:
-            packet_count += 1
-        else:
-            self.packet_rate = math.ceil( ( self.packet_rate + ( packet_count / (self.time_last_packet - self.time_last_rate) ) ) / 2 )
-            self.time_last_rate = self.time_last_packet
-            print "\rPPS: %r" % self.packet_rate
 
     def disconnect(self, reason=None):
         self.transport.loseConnection()
@@ -153,12 +146,12 @@ class CubeWorldConnection(Protocol):
             return
         self.connection_state = -1
         self.server.connections.discard(self)
-        self.server.worlds[self.world_index].unregister_entity(self, self.position.x, self.position.y)
         if self.connection_state > 0:
             del self.server.players[self]
             print '[INFO] Player %s left the game.' % self.name
             self.server.send_chat('<<< %s left the game' % self.name)
         if self.entity_id is not None:
+            self.server.worlds[self.world_index].unregister(self.position.x, self.position.y, self.entity_id)
             del self.server.entities[self.entity_id]
             self.server.entity_ids.put_back(self.entity_id)
         if self.scripts is not None:
@@ -177,8 +170,15 @@ class CubeWorldConnection(Protocol):
         if handler is None:
             # print 'Unhandled client packet: %s' % packet.packet_id
             return
-        time_last_packet = reactor.seconds()
         handler(packet)
+        self.time_last_packet = reactor.seconds()
+        if self.time_last_rate == self.time_last_packet:
+            self.packet_count += 1
+        else:
+            self.packet_rate = math.ceil( ( self.packet_rate + ( self.packet_count / (self.time_last_packet - self.time_last_rate) ) ) / 2 )
+            self.packet_count = 0
+            self.time_last_rate = self.time_last_packet
+            print "\rPPS: %r" % self.packet_rate
 
     def on_version_packet(self, packet):
         if packet.version != constants.CLIENT_VERSION:
@@ -387,16 +387,16 @@ class CubeWorldConnection(Protocol):
         # Call join script
         if self.scripts.call('on_join').result is False:
             self.kick('Blocked join')
-            print 'Client %s disconnected by script.' % self.address.host
+            print '[WARNING] Joining client %s blocked by script!' % self.address.host
             return
         self.connection_state = 1
-        if self.entity_data.level < config.join_level_min:
-            print '[WARNING] Level of player %s #%s (%s) [%s] is lower than minimum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, config.join_level_min)
-            self.kick('Your level has to be at least %s' % config.join_level_min)
+        if self.entity_data.level < config.base.join_level_min:
+            print '[WARNING] Level of player %s #%s (%s) [%s] is lower than minimum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, config.base.join_level_min)
+            self.kick('Your level has to be at least %s' % config.base.join_level_min)
             return
-        if self.entity_data.level > config.join_level_max:
-            print '[WARNING] Level of player %s #%s (%s) [%s] is higher than maximum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, config.join_level_max)
-            self.kick('Your level has to be lower than %s' % config.join_level_max)
+        if self.entity_data.level > config.base.join_level_max:
+            print '[WARNING] Level of player %s #%s (%s) [%s] is higher than maximum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, config.base.join_level_max)
+            self.kick('Your level has to be lower than %s' % config.base.join_level_max)
             return
         self.last_pos = self.position
         # we dont want cheaters being able joining the server
@@ -412,7 +412,7 @@ class CubeWorldConnection(Protocol):
                                                                common.get_entity_type_level_str(self.entity_data)))
         # connection successful -> continue
         self.connection_state = 3
-
+        self.server.worlds[self.world_index].register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
         for player in self.server.players.values():
             entity_packet.set_entity(player.entity_data, player.entity_id)
             self.send_packet(entity_packet)
@@ -690,7 +690,7 @@ class CubeWorldServer(Factory):
         self.listen_tcp(base.port, self)
 
     def buildProtocol(self, addr):
-        con_remain = self.config.max_connections_per_ip
+        con_remain = self.config.base.max_connections_per_ip
         for connection in self.connections:
             if connection.address.host == addr.host:
                 con_remain -= 1
@@ -709,12 +709,14 @@ class CubeWorldServer(Factory):
     def remove_item(self, chunk, index):
         items = self.chunk_items[chunk]
         ret = items.pop(index)
+        self.worlds[0].unregister(ret.pos.x, ret.pos.y, ret.entity_id)
+        self.server.entity_ids.put_back(ret.entity_id)
         self.broadcast_chunkitems()
 
     def drop_item(self, item_data, pos, lifetime=None):
         chunk_items = self.chunk_items[get_chunk(pos)]
         if len(chunk_items) > constants.MAX_ITEMS_PER_CHUNK:
-            print '[WARNING] To many items in chunk %s !' % cpos
+            print '[WARNING] To many items at %s !' % cpos
             return False
         item = ChunkItemData()
         item.drop_time = 750
@@ -723,8 +725,9 @@ class CubeWorldServer(Factory):
         item.something3 = item.something5 = item.something6 = 0
         item.pos = pos
         item.item_data = item_data
+        item.entity_id = server.entity_ids.pop()
         chunk_items.append(item)
-        self.worlds[0].register_entity(item)
+        self.worlds[0].register(pos.x, pos.y, pos.z, item.entity_id, item)
         self.broadcast_chunkitems()
 
     def update(self):

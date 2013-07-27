@@ -17,9 +17,9 @@
 
 
 from cuwo.vector import Vector3
+from cuwo import constants
+from cuwo import common
 
-import cuwo.constants
-import cuwo.common
 import collections
 import math
 
@@ -161,10 +161,13 @@ class Chunk(object):
             return
         self.locatables[locatable.id] = locatable
 
-    def unregister_locatable(self, locatable):
-        if (not locatable) or (len(self.locatables) < 1):
-            return None
-        return self.locatables.pop(locatable.id, None)
+    def register(self, x, y, z, id, obj=None):
+        lct = Locatable(x, y, z, id, obj)
+        self.register_locatable(lct)
+        return lct
+
+    def unregister(self, id):
+        return self.locatables.pop(id, None)
 
 
 class Sector(object):
@@ -228,11 +231,11 @@ class Sector(object):
             return None
         return get_closest_locatable( iter(locatables), lx, ly, lz, max_distance )
 
-    def register_locatable(self, locatable):
-        self.get_chunk_scaled(locatable.x, locatable.y).register_locatable(locatable)
+    def register(self, x, y, z, id, obj=None):
+        return self.get_chunk_scaled(x, y).register(x, y, z, id, obj)
 
-    def unregister_locatable(self, locatable):
-        return self.get_chunk_scaled(locatable.x, locatable.y).unregister_locatable(locatable)
+    def unregister(self, x, y, id):
+        return self.get_chunk_scaled(x, y).unregister(id)
 
 
 class World(object):
@@ -240,6 +243,7 @@ class World(object):
         self.server = server
         self.name = name
         self.sectors = {}
+        self.locatables = {}
 
     # Get sector at sector position
     def get_sector_unscaled(self, sx, sy):
@@ -296,11 +300,12 @@ class World(object):
             return None
         return get_closest_locatable( iter(locatables), lx, ly, lz, max_distance )
 
-    def register_locatable(self, locatable):
-        self.get_sector_scaled(locatable.x, locatable.y).register_locatable(locatable)
+    def register(self, x, y, z, id, obj=None):
+        lct = self.get_sector_scaled(x, y).register(x, y, z, id, obj)
+        self.locatables[id] = lct
 
-    def unregister_locatable(self, locatable):
-        return self.get_sector_scaled(locatable.x, locatable.y).unregister_locatable(locatable)
+    def unregister(self, x, y, id):
+        return self.get_sector_scaled(x, y).unregister(x, y, id)
 
     # unregisters from old chunk and registers in new
     # chunk only when moved from one chunk to another
