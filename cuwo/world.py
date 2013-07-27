@@ -35,7 +35,7 @@ def get_locatables_near_line(locatable_iter, x1, y1, z1, x2, y2, z2, lrud_dist=3
     hy = max(y1, y2)
     hz = max(z1, z2)
     max_distance = math.abs(max_distance)
-    locatable_set = set([])
+    locatable_set = set()
     while True:
         try:
             ltv = next(locatable_iter)
@@ -58,7 +58,7 @@ def get_locatables_in_range(locatable_iter, lx, ly, lz, max_distance=3):
     if not locatable_iter:
         return None
     max_distance = math.abs(max_distance)
-    locatable_set = set([])
+    locatable_set = set()
     while True:
         try:
             ltv = next(locatable_iter)

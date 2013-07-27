@@ -34,7 +34,8 @@ from cuwo.types import IDPool, MultikeyDict, AttributeSet
 from cuwo.vector import Vector3
 from cuwo import constants
 from cuwo.common import (get_clock_string, parse_clock, parse_command,
-                         get_chunk, filter_string)
+                         get_chunk, filter_string, get_distance_3d,
+                         get_needed_total_xp, get_entity_type_level_str)
 from cuwo.script import ScriptManager
 from cuwo.config import ConfigObject
 from cuwo import database
@@ -72,7 +73,6 @@ class CubeWorldConnection(Protocol):
     connection_state = 0
     entity_id = None
     entity_data = None
-    world_index = 0
     change_index = -1
     scripts = None
 
@@ -151,8 +151,7 @@ class CubeWorldConnection(Protocol):
             print '[INFO] Player %s left the game.' % self.name
             self.server.send_chat('<<< %s left the game' % self.name)
         if self.entity_id is not None:
-            self.server.worlds[self.world_index].unregister(self.entity_id)
-            del self.server.entities[self.entity_id]
+            self.server.world.unregister(self.entity_id)
             self.server.entity_ids.put_back(self.entity_id)
         if self.scripts is not None:
             self.scripts.unload()
@@ -196,7 +195,6 @@ class CubeWorldConnection(Protocol):
     def on_entity_packet(self, packet):
         if self.entity_data is None:
             self.entity_data = create_entity_data()
-            self.server.entities[self.entity_id] = self.entity_data
         mask = packet.update_entity(self.entity_data)
         self.entity_data.mask |= mask
         if self.entity_data.entity_type >= constants.ENTITY_TYPE_PLAYER_MIN_ID and self.entity_data.entity_type <= constants.ENTITY_TYPE_PLAYER_MAX_ID and getattr(self.entity_data, 'name', None):
@@ -264,7 +262,7 @@ class CubeWorldConnection(Protocol):
         chat_packet.entity_id = self.entity_id
         chat_packet.value = message
         self.server.broadcast_packet(chat_packet)
-        print '%s: %s' % (self.name, message)
+        print '[CHAT] %s: %s' % (self.name, message)
 
     def on_interact_packet(self, packet):
         interact_type = packet.interact_type
@@ -292,16 +290,16 @@ class CubeWorldConnection(Protocol):
 
     def on_hit_packet(self, packet):
         try:
-            target = self.server.entities[packet.target_id]
+            target = self.server.hit_entity_id(packet.target_id)
         except KeyError:
             return
         if constants.MAX_DISTANCE > 0:
-            edist = common.get_distance_3d(self.entity_data.x,
-                                           self.entity_data.y,
-                                           self.entity_data.z,
-                                           target.entity_data.x,
-                                           target.entity_data.y,
-                                           target.entity_data.z)
+            edist = get_distance_3d(self.entity_data.x,
+                                    self.entity_data.y,
+                                    self.entity_data.z,
+                                    target.entity_data.x,
+                                    target.entity_data.y,
+                                    target.entity_data.z)
             if edist > constants.MAX_DISTANCE:
                 print '[ANTICHEAT BASE] Player %s tried to attack target that is %s away!' % (self.name, edist)
                 self.kick('Range error')
@@ -356,7 +354,7 @@ class CubeWorldConnection(Protocol):
             print '[ANTICHEAT BASE] Player %s tried to join with an abnormal character level! Kicked.' % self.name
             return True
         # This seems to filter prevent cheaters from joining
-        needed_xp = common.get_needed_total_xp(self.entity_data.level)
+        needed_xp = get_needed_total_xp(self.entity_data.level)
         if needed_xp > self.entity_data.current_xp:
             self.kick('Invalid character level')
             print '[ANTICHEAT BASE] Player %s tried to join with character level %s that is higher than total xp needed (%s/%s)! Kicked.' % (self.name, self.entity_data.level, self.entity_data.current_xp, needed_xp)
@@ -389,28 +387,31 @@ class CubeWorldConnection(Protocol):
             return
         self.connection_state = 1
         if self.entity_data.level < self.server.config.base.join_level_min:
-            print '[WARNING] Level of player %s #%s (%s) [%s] is lower than minimum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, self.server.config.base.join_level_min)
+            print '[WARNING] Level of player %s #%s (%s) [%s] is lower than minimum of %s' % (self.name, self.entity_id, get_entity_type_level_str(self.entity_data), self.address.host, self.server.config.base.join_level_min)
             self.kick('Your level has to be at least %s' % self.server.config.base.join_level_min)
             return
         if self.entity_data.level > self.server.config.base.join_level_max:
-            print '[WARNING] Level of player %s #%s (%s) [%s] is higher than maximum of %s' % (self.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, self.server.config.base.join_level_max)
+            print '[WARNING] Level of player %s #%s (%s) [%s] is higher than maximum of %s' % (self.name, self.entity_id, get_entity_type_level_str(self.entity_data), self.address.host, self.server.config.base.join_level_max)
             self.kick('Your level has to be lower than %s' % self.server.config.base.join_level_max)
             return
         self.last_pos = self.position
         # we dont want cheaters being able joining the server
         if self.do_anticheat_actions():
             self.server.send_chat('[ANTICHEAT] Player %s (%s) has been kicked for cheating.' % (self.name,
-                                                                                                common.get_entity_type_level_str(self.entity_data)))
+                                                                                                get_entity_type_level_str(self.entity_data)))
             return
         print '[WARNING] Player %s #%s (%s) [%s] joined the game' % (self.name,
-                                                                     common.get_entity_type_level_str(self.entity_data),
+                                                                     get_entity_type_level_str(self.entity_data),
                                                                      self.entity_id,
                                                                      self.address.host)
         self.server.send_chat('>>> %s (%s) joined the game' % (self.name,
-                                                               common.get_entity_type_level_str(self.entity_data)))
+                                                               get_entity_type_level_str(self.entity_data)))
         # connection successful -> continue
         self.connection_state = 3
-        self.server.worlds[self.world_index].register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+        self.server.world.register(self.position.x,
+                                   self.position.y,
+                                   self.position.z,
+                                   self.entity_id, self)
         for player in self.server.players.values():
             entity_packet.set_entity(player.entity_data, player.entity_id)
             self.send_packet(entity_packet)
@@ -578,19 +579,18 @@ class CubeWorldConnection(Protocol):
             if (self.position.x == self.old_pos.x) and (self.position.y == self.old_pos.y) and (self.position.z == self.old_pos.z):
                 return True
             server = self.server
-            world = server.worlds[self.world_index]
             cpres = self.scripts.call('on_pos_update').result
             if cpres is False:
                 self.entity_data.x = self.old_pos.x
                 self.entity_data.y = self.old_pos.y
                 return True
             # check new coordinates and distances
-            edist = common.get_distance_3d(self.old_pos.x,
-                                           self.old_pos.y,
-                                           self.old_pos.z,
-                                           self.position.x,
-                                           self.position.y,
-                                           self.position.z)
+            edist = get_distance_3d(self.old_pos.x,
+                                    self.old_pos.y,
+                                    self.old_pos.z,
+                                    self.position.x,
+                                    self.position.y,
+                                    self.position.z)
             if edist > (reactor.seconds() * constants.MAX_MOVE_DISTANCE):
                 self.entity_data.x = self.old_pos.x
                 self.entity_data.y = self.old_pos.y
@@ -608,11 +608,11 @@ class CubeWorldConnection(Protocol):
                 continue
             if item.level < 0:
                 self.kick('Illegal item')
-                print '[INFO] Player %s #%s (%s) [%s] had item with level lover than 0' % (self.entity_data.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host)
+                print '[INFO] Player %s #%s (%s) [%s] had item with level lover than 0' % (self.entity_data.name, self.entity_id, get_entity_type_level_str(self.entity_data), self.address.host)
                 return False
             if item.material in self.server.config.base.forbid_item_possession:
                 self.kick('Forbidden item')
-                print '[INFO] Player %s #%s (%s) [%s] had forbidden item #%s' % (self.entity_data.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, item.material)
+                print '[INFO] Player %s #%s (%s) [%s] had forbidden item #%s' % (self.entity_data.name, self.entity_id, get_entity_type_level_str(self.entity_data), self.address.host, item.material)
                 return False
         return True
 
@@ -661,7 +661,7 @@ class CubeWorldServer(Factory):
         database.create_structure(self.db_con)
 
         # Initialize default world
-        self.worlds = [World(self, 'default')]
+        self.world = World(self)
 
         self.update_loop = LoopingCall(self.update)
         self.update_loop.start(1.0 / constants.UPDATE_FPS, False)
@@ -754,25 +754,29 @@ class CubeWorldServer(Factory):
         #    self.broadcast_packet(entity_packet)
         #self.broadcast_packet(update_finished_packet)
 
-        locatable_set = set([])
+        updated = set()
         for player in self.players:
-            nearby_locatables = self.worlds[player.world_index].get_locatables(player.position.x, player.position.y, player.position.z, constants.MAX_DISTANCE)
-            locatable_set.update(nearby_locatables)
-        locatable_iter = iter(locatable_set)
-        while True:
-            try:
-                locatable = next(locatable_iter)
-                if not locatable:
+            nearby_locatables = self.world.get_locatables(player.position.x,
+                                                          player.position.y,
+                                                          player.position.z,
+                                                          constants.MAX_DISTANCE)
+            locatable_iter = iter(nearby_locatables)
+            while True:
+                try:
+                    locatable = next(locatable_iter)
+                    if (not locatable) or (not locatable.obj):
+                        continue
+                    if locatable.id in updated:
+                        continue
+                    updated.add(locatable.id)
+                    if locatable.obj.mask > 0:
+                        entity_packet.set_entity(locatable.obj, locatable.id, locatable.obj.mask)
+                        self.broadcast_packet(entity_packet)
+                        locatable.obj.mask = 0
+                except StopIteration:
+                    break
+                except:
                     continue
-                entity = self.entities[locatable.id]
-                if entity.mask > 0:
-                    entity_packet.set_entity(entity, locatable.id, entity.mask)
-                    entity.mask = 0
-                    self.broadcast_packet(entity_packet)
-            except StopIteration:
-                break
-            except:
-                continue
         self.broadcast_packet(update_finished_packet)
         if update_seconds_delta != 0:
             for player in self.players:
@@ -784,6 +788,9 @@ class CubeWorldServer(Factory):
                     print '[WARNING] Connection timed out for Player %s (ID: %s)' % (player.entity_data.name, player.entity_id)
                     player.kick('Connection timed out')
             self.broadcast_time()
+
+    def hit_entity_id(self, id):
+        return True
 
     def send_chat(self, value):
         packet = ServerChatMessage()
