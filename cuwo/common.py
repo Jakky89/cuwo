@@ -101,6 +101,23 @@ def get_xp_from_to_level(levelFrom, levelTo):
 def get_power_level(level):
     return math.floor(100 - 99 * ((1 + 0.0536) / (1 + 0.0536 * level)))
 
+def get_base_health(class_type, level):
+    if class_type==1:
+        # WARRIORS
+        coefficient = 1.3
+    elif class_type==2:
+        # RANGERS
+        coefficient = 1.1
+    elif class_type==3:
+        # MAGES
+        coefficient = 1.0
+    elif class_type==4:
+        # ROGUES
+        coefficient = 1.2
+    else:
+        return None
+    scaling = 100.0
+    return (scaling * (coefficient * 2**(3 * (level - 1)/(level + 19) + 1)))
 
 def get_player_race_str(race_id):
     return constants.PLAYER_RACES[race_id]
