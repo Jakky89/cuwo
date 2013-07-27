@@ -371,7 +371,7 @@ class CubeWorldConnection(Protocol):
 
     def on_command(self, command, parameters):
         self.scripts.call('on_command', command=command, args=parameters)
-        if (command == 'register') or (command == 'login'):
+        if ( (not parameters) or (command == 'register') or (command == 'login') ):
             print '[COMMAND] %s: /%s' % (self.name, command)
         else:
             print '[COMMAND] %s: /%s' % (self.name, command, ' '.join(parameters))
@@ -773,7 +773,7 @@ class CubeWorldServer(Factory):
                 if player.time_last_packet > (uxtime - constants.CLIENT_RECV_TIMEOUT):
                     if player.entity_data.changed:
                         player.entity_data.changed = False
-                        player.do_anticheat_actions()
+                        ret = player.do_anticheat_actions()
                 else:
                     print '[WARNING] Connection timed out for Player %s (ID: %s)' % (player.entity_data.name, player.entity_id)
                     player.kick('Connection timed out')

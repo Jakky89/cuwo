@@ -14,9 +14,9 @@ class WelcomeServer(ServerScript):
         self.welcome = self.server.format_lines(config.welcome)
         self.help_players = config.help_players
 
-    def on_new_connection(self, connection):
-        connection.send_lines(self.welcome)
-        reactor.callLater(10, connection.send_lines, self.help_players)
+    def on_new_connection(self, event):
+        reactor.callLater(2000, event.connection.send_lines, self.welcome)
+        reactor.callLater(5000, event.connection.send_lines, self.help_players)
 
 
 def get_class():
