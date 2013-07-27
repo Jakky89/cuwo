@@ -28,9 +28,8 @@ from cuwo.packet import (PacketHandler, write_packet, CS_PACKETS,
                          ClientChatMessage, ServerChatMessage,
                          create_entity_data, UpdateFinished, CurrentTime,
                          ServerUpdate, ServerFull, ServerMismatch,
-                         INTERACT_DROP, INTERACT_PICKUP, ChunkItemData,
-                         ChunkItems, InteractPacket, PickupAction,
-                         HitPacket, ShootPacket)
+                         ChunkItemData, ChunkItems, InteractPacket,
+                         PickupAction, HitPacket, ShootPacket)
 from cuwo.types import IDPool, MultikeyDict, AttributeSet
 from cuwo.vector import Vector3
 from cuwo import constants
@@ -40,7 +39,7 @@ from cuwo.script import ScriptManager
 from cuwo.config import ConfigObject
 from cuwo import database
 from cuwo import entity
-import cuwo.world
+from cuwo.world import (World, Sector, Chunk, Locatable)
 
 import re
 import collections
@@ -59,6 +58,7 @@ join_packet = JoinPacket()
 seed_packet = SeedData()
 chat_packet = ServerChatMessage()
 entity_packet = EntityUpdate()
+interact_packet = InteractPacket()
 update_finished_packet = UpdateFinished()
 time_packet = CurrentTime()
 mismatch_packet = ServerMismatch()
@@ -87,7 +87,10 @@ class CubeWorldConnection(Protocol):
     chat_messages_burst = 0
 
     # used for detecting dead connections
-    time_last_packet  = None
+    time_last_packet = None
+    time_last_rate = None
+    packet_count = 0
+    packet_rate = 10
     # used for basic DoS protection
     packet_burst = 0
 
@@ -133,6 +136,13 @@ class CubeWorldConnection(Protocol):
 
     def dataReceived(self, data):
         self.packet_handler.feed(data)
+        self.time_last_packet = reactor.seconds()
+        if self.time_last_rate == self.time_last_packet:
+            packet_count += 1
+        else:
+            self.packet_rate = math.ceil( ( self.packet_rate + ( packet_count / (self.time_last_packet - self.time_last_rate) ) ) / 2 )
+            self.time_last_rate = self.time_last_packet
+            print "\rPPS: %r" % self.packet_rate
 
     def disconnect(self, reason=None):
         self.transport.loseConnection()
@@ -180,7 +190,7 @@ class CubeWorldConnection(Protocol):
         self.entity_id = server.entity_ids.pop()
         join_packet.entity_id = self.entity_id
         self.send_packet(join_packet)
-        seed_packet.seed = server.config.seed
+        seed_packet.seed = server.config.base.seed
         self.send_packet(seed_packet)
 
     def on_entity_packet(self, packet):
@@ -231,7 +241,7 @@ class CubeWorldConnection(Protocol):
             self.chat_messages_burst = 0
         elif self.chat_messages_burst >= constants.ANTISPAM_BURST_CHAT:
             self.time_last_chat = reactor.seconds()
-            res = self.scripts.call('on_spamming_chat')
+            res = self.scripts.call('on_spamming_chat').result
             if not res:
                 # As we do not want to spam back only do this when
                 # burst limit is reached for the first time
@@ -258,15 +268,20 @@ class CubeWorldConnection(Protocol):
 
     def on_interact_packet(self, packet):
         interact_type = packet.interact_type
-        item = packet.item_data
-        if interact_type == INTERACT_DROP:
-            pos = self.position.copy()
-            pos.z -= constants.BLOCK_SCALE
-            if self.scripts.call('on_drop', item=item, pos=pos) is False:
+        pos = self.position
+        pos.z -= constants.BLOCK_SCALE
+        res = self.scripts.call('on_interact', type=interact_type, pos=pos).result
+        if res is False:
+            return
+        if interact_type == constants.INTERACT_DROP:
+            item = packet.item_data
+            res = self.scripts.call('on_drop', item=item, pos=pos).result
+            if res is False:
                 return
             self.server.drop_item(item, pos)
-        elif interact_type == INTERACT_PICKUP:
-            res = self.scripts.call('on_pickup')
+        elif interact_type == constants.INTERACT_PICKUP:
+            item = packet.item_data
+            res = self.scripts.call('on_pickup', item=item, pos=pos).result
             if res is False:
                 return
             chunk = (packet.chunk_x, packet.chunk_y)
@@ -275,20 +290,21 @@ class CubeWorldConnection(Protocol):
                 self.give_item(item)
             except KeyError:
                 pass
+        self.server.broadcast_packet(packet)
 
     def on_hit_packet(self, packet):
         try:
             target = self.server.entities[packet.target_id]
         except KeyError:
             return
-        if constants.MAX_HIT_DISTANCE > 0:
+        if constants.MAX_DISTANCE > 0:
             edist = common.get_distance_3d(self.entity_data.x,
                                            self.entity_data.y,
                                            self.entity_data.z,
                                            target.entity_data.x,
                                            target.entity_data.y,
                                            target.entity_data.z)
-            if edist > constants.MAX_HIT_DISTANCE:
+            if edist > constants.MAX_DISTANCE:
                 print '[ANTICHEAT BASE] Player %s tried to attack target that is %s away!' % (self.name, edist)
                 self.kick('Range error')
                 return
@@ -553,7 +569,7 @@ class CubeWorldConnection(Protocol):
             self.kick('Name to short')
             print '[WARNING] %s had name shorter than %s characters! Kicked.' % (self.address.host, constants.NAME_LENGTH_MIN)
             return False
-        if re.search(server.config.name_filter, self.name) is None:
+        if re.search(server.config.base.name_filter, self.name) is None:
             self.kick('Illegal name')
             print '[WARNING] %s had illegal name! Kicked.' % self.address.host
             return False
@@ -565,7 +581,7 @@ class CubeWorldConnection(Protocol):
                 return True
             server = self.server
             world = server.worlds[self.world_index]
-            cpres = self.scripts.call('on_pos_update')
+            cpres = self.scripts.call('on_pos_update').result
             if cpres is False:
                 self.entity_data.x = self.old_pos.x
                 self.entity_data.y = self.old_pos.y
@@ -596,7 +612,7 @@ class CubeWorldConnection(Protocol):
                 self.kick('Illegal item')
                 print '[INFO] Player %s #%s (%s) [%s] had item with level lover than 0' % (self.entity_data.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host)
                 return False
-            if item.material in server.config.forbid_item_possession:
+            if item.material in server.config.base.forbid_item_possession:
                 self.kick('Forbidden item')
                 print '[INFO] Player %s #%s (%s) [%s] had forbidden item #%s' % (self.entity_data.name, self.entity_id, common.get_entity_type_level_str(self.entity_data), self.address.host, item.material)
                 return False
@@ -624,16 +640,14 @@ class CubeWorldConnection(Protocol):
 class CubeWorldServer(Factory):
     exit_code = 0
     items_changed = False
-    last_secondly_check = -1
-    ticks_since_last_second = -1
-    ticks_per_second = -1
+    last_secondly_check = None
+    ticks_since_last_second = 25
+    ticks_per_second = 25
     current_change_index = 0
 
     def __init__(self, config):
         self.config = config
-
-        self.db_con = database.get_connection()
-        database.create_structure(self.db_con)
+        base = config.base
 
         # GAME RELATED
         self.update_packet = ServerUpdate()
@@ -643,21 +657,28 @@ class CubeWorldServer(Factory):
         self.players = MultikeyDict()
 
         self.chunk_items = collections.defaultdict(list)
+        self.entities = {}
         self.entity_ids = IDPool(1)
+
+        # DATABASE
+        self.db_con = database.get_connection()
+        database.create_structure(self.db_con)
+
+        # Initialize default world
         self.worlds = [World(self, 'default')]
 
         self.update_loop = LoopingCall(self.update)
         self.update_loop.start(1.0 / constants.UPDATE_FPS, False)
 
         # SERVER RELATED
-        self.git_rev = getattr(config, 'git_rev', None)
+        self.git_rev = base.get('git_rev', None)
 
         self.passwords = {}
-        for k, v in config.passwords.iteritems():
+        for k, v in base.passwords.iteritems():
             self.passwords[k.lower()] = v
 
         self.scripts = ScriptManager()
-        for script in config.scripts:
+        for script in base.scripts:
             self.load_script(script)
 
         # INGAME TIME
@@ -665,7 +686,8 @@ class CubeWorldServer(Factory):
         self.start_time = reactor.seconds()
         self.set_clock('12:00')
 
-        reactor.listenTCP(config.port, self)
+        # START LISTENING
+        self.listen_tcp(base.port, self)
 
     def buildProtocol(self, addr):
         con_remain = self.config.max_connections_per_ip
@@ -678,7 +700,7 @@ class CubeWorldServer(Factory):
                     connection.disconnect()
         if con_remain <= 0:
             return
-        ret = self.scripts.call('on_connection_attempt', address=addr)
+        ret = self.scripts.call('on_connection_attempt', address=addr).result
         if ret is False:
             print '[WARNING] Connection attempt for %s blocked by script!' % addr.host
             return False
@@ -706,9 +728,11 @@ class CubeWorldServer(Factory):
         self.broadcast_chunkitems()
 
     def update(self):
-        # secondly update check
         uxtime = int(reactor.seconds())
-        update_seconds_delta = uxtime - self.last_secondly_check
+        if self.last_secondly_check is not None:
+            update_seconds_delta = uxtime - self.last_secondly_check
+        else:
+            update_seconds_delta = 0
         if update_seconds_delta == 0:
             self.ticks_since_last_second += 1
         else:
@@ -717,19 +741,38 @@ class CubeWorldServer(Factory):
                 self.scripts.call('update')
                 self.ticks_per_second = (self.ticks_per_second + (self.ticks_since_last_second / update_seconds_delta)) / 2
                 self.ticks_since_last_second = 0
-                print "\r%s TPS" % self.ticks_per_second
+                print "\rTPS: %r" % self.ticks_per_second
                 if self.ticks_per_second < 20:
-                    print '[WARNING] The amount of TPS is as low as %s' % self.ticks_per_second
+                    print "\r[WARNING] The amount of TPS is as low as %s" % self.ticks_per_second
             else:
                 print '[WARNING] Seems like the reactor time went backwards! Ignoring.'
 
-        # entity updates
-        for entity_id, entity in self.entities.iteritems():
-            entity_packet.set_entity(entity, entity_id, entity.mask)
-            entity.mask = 0
-            self.broadcast_packet(entity_packet)
-        self.broadcast_packet(update_finished_packet)
+        #for entity_id, entity in self.entities.iteritems():
+        #    entity_packet.set_entity(entity, entity_id, entity.mask)
+        #    entity.mask = 0
+        #    self.broadcast_packet(entity_packet)
+        #self.broadcast_packet(update_finished_packet)
 
+        locatable_set = set([])
+        for player in self.players:
+            nearby_locatables = self.worlds[player.world_index].get_locatables(player.position.x, player.position.y, player.position.z, constants.MAX_DISTANCE)
+            locatable_set.update(nearby_locatables)
+        locatable_iter = iter(locatable_set)
+        while True:
+            try:
+                locatable = next(locatable_iter)
+                if not locatable:
+                    continue
+                entity = self.entities[locatable.id]
+                if entity.mask > 0:
+                    entity_packet.set_entity(entity, locatable.id, entity.mask)
+                    entity.mask = 0
+                    self.broadcast_packet(entity_packet)
+            except StopIteration:
+                break
+            except:
+                continue
+        self.broadcast_packet(update_finished_packet)
         if update_seconds_delta != 0:
             for player in self.players:
                 if player.time_last_packet > (uxtime - constants.CLIENT_RECV_TIMEOUT):
@@ -765,7 +808,7 @@ class CubeWorldServer(Factory):
 
     def broadcast_packet(self, packet):
         data = write_packet(packet)
-        for player in self.players:
+        for player in self.players.values():
             player.transport.write(data)
 
     def broadcast_time(self):
@@ -776,7 +819,7 @@ class CubeWorldServer(Factory):
     # line/string formatting options based on config
 
     def format(self, value):
-        format_dict = {'server_name': self.config.server_name}
+        format_dict = {'server_name': self.config.base.server_name}
         return value % format_dict
 
     def format_lines(self, value):
@@ -784,7 +827,6 @@ class CubeWorldServer(Factory):
         for line in value:
             lines.append(self.format(line))
         return lines
-
 
     # script methods
 
@@ -812,21 +854,24 @@ class CubeWorldServer(Factory):
         else:
             return None
         script = mod.get_class()(self)
-        print '[INFO] Loaded script "%r"' % name
+        print '[INFO] Loaded script %r' % name
         return script
 
     def call_command(self, user, command, args):
         """
         Calls a command from an external interface, e.g. IRC, console
         """
-        return self.scripts.call('on_command', user=user, command=command, args=args).result
+        return self.scripts.call('on_command', user=user, command=command,
+                                 args=args).result
+
+    def get_mode(self):
+        return self.scripts.call('get_mode').result
 
 
     # data store methods
 
     def load_data(self, name, default=None):
         return database.load_data(self.db_con, name, default)
-
 
     def save_data(self, name, value):
         return database.save_data(self.db_con, name, value)
@@ -843,7 +888,7 @@ class CubeWorldServer(Factory):
 
     def get_elapsed_time(self):
         dt = reactor.seconds() - self.start_time
-        dt *= self.config.time_modifier * constants.NORMAL_TIME_SPEED
+        dt *= self.config.base.time_modifier * constants.NORMAL_TIME_SPEED
         return dt * 1000 + self.extra_elapsed_time
 
 
@@ -856,6 +901,9 @@ class CubeWorldServer(Factory):
     def get_clock(self):
         return get_clock_string(self.get_time())
 
+
+    # stop/restart
+
     def stop(self, code=None):
         self.exit_code = code
         reactor.stop()
@@ -863,14 +911,17 @@ class CubeWorldServer(Factory):
 
     # twisted wrappers
 
+    def listen_udp(self, *arg, **kw):
+        interface = self.config.base.network_interface
+        return reactor.listenUDP(*arg, interface=interface, **kw)
+
     def listen_tcp(self, *arg, **kw):
-        interface = self.config.network_interface
+        interface = self.config.base.network_interface
         return reactor.listenTCP(*arg, interface=interface, **kw)
 
     def connect_tcp(self, *arg, **kw):
-        interface = self.config.network_interface
+        interface = self.config.base.network_interface
         return reactor.connectTCP(*arg, bindAddress=(interface, 0), **kw)
-
 
 
 def main():
@@ -880,14 +931,16 @@ def main():
             unicode(sys.executable, sys.getfilesystemencoding()))
         sys.path.append(path)
 
-    import config
+    config = ConfigObject('./config')
     server = CubeWorldServer(config)
-    print '[INFO] Server is listening on port %s using cuwo %s' % (config.port, getattr(config, 'git_rev', None))
-    if config.profile_file is None:
+
+    print '[INFO] Server is listening on port %s using cuwo %s' % (config.base.port, server.git_rev)
+
+    if config.base.profile_file is None:
         reactor.run()
     else:
         import cProfile
-        cProfile.run('reactor.run()', filename=config.profile_file)
+        cProfile.run('reactor.run()', filename=config.base.profile_file)
 
     sys.exit(server.exit_code)
 

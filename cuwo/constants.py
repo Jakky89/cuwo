@@ -75,8 +75,8 @@ PLAYER_MAX_LEVEL = 3000
 NAME_LENGTH_MIN = 3
 NAME_LENGTH_MAX = 16
 
-# Maximum distance allowed to be able to hit target
-MAX_HIT_DISTANCE = 100
+# Maximum distance
+MAX_DISTANCE = 100
 
 # Maximum move distance per second
 MAX_MOVE_DISTANCE = 100

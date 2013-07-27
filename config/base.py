@@ -11,7 +11,7 @@ port = 12345
 
 # World seed used for world generation (change if you want another landscape etc.)
 # When changing this, the old world and its data gets lost.
-seed = 1
+seed = 145151
 
 # Password salt
 # Change this to a random string value before starting cuwo the first time
@@ -74,11 +74,7 @@ time_modifier = 1.0
 
 # List of scripts to run on the server on startup.
 # Consider turning on 'pvp', i.e. player versus player
-<<<<<<< HEAD:config.py
-scripts = ['config', 'log', 'commands', 'welcome', 'pvp', 'ban', 'console']
-=======
-scripts = ['log', 'commands', 'welcome', 'ban', 'ddos', 'console', 'master']
->>>>>>> upstream/master:config/base.py
+scripts = ['master', 'log', 'commands', 'welcome', 'ban', 'console']
 
 # Passwords used for rights management. Keys are passwords, and values are
 # a list of user types under that password. Right now, only 'admin' is defined,
@@ -92,7 +88,6 @@ name_filter = "^[a-zA-Z0-9_!@#$%\^&*()\[\]|:;'.,/\-+ <>\\\"{}~`=?]{2,16}$"
 # Used by the welcome.py script. Sends a small welcome message to users,
 # replacing %(server_name)s with the server name defined in this file.
 welcome = ["Welcome to %(server_name)s!",
-<<<<<<< HEAD:config.py
            "Provided by cuwo - an Open-Source Cube World Server-Implementation licensed under GNU GPL 3.",
            "cuwo currently is in an early development state so not everything can work as expected yet.",
            "Player Commands: /help, /list, /spawn, /tell <player> <message>, /whois <player>, /whereis <player>",
@@ -116,8 +111,6 @@ rotate_daily = True
 
 # Profile file. Set to something other than None to enable.
 profile_file = './localprofiler.log'
-=======
-           "(server powered by cuwo)"]
 
 # Logging variables
 log_name = './logs/log.txt'
@@ -137,4 +130,3 @@ network_interface = ''
 
 # Server port. Do not change this unless you have a modified client!
 port = 12345
->>>>>>> upstream/master:config/base.py

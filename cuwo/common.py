@@ -121,7 +121,6 @@ def get_distance_2d(x1, y1, x2, y2):
 def get_distance_3d(x1, y1, z1, x2, y2, z2):
     return math.sqrt( math.hypot(x1, x2) + math.hypot(y1, y2) + math.hypot(z1, z2) )
 
-
 def parse_command(message):
     if isinstance(message, unicode):
         # due to shlex unicode problems

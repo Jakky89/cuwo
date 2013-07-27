@@ -16,69 +16,94 @@
 # along with cuwo.  If not, see <http://www.gnu.org/licenses/>.
 
 
-from cuwo.types import MultikeyDict, AttributeSet
 from cuwo.vector import Vector3
-from cuwo import constants
-from cuwo.chunk import Chunk
-from cuwo import database
-from cuwo import entity
 
+import cuwo.constants
 import cuwo.common
 import collections
 import math
 
 
-# Returns set of entities in range
-def get_entities_in_range(entity_iter, ex, ey, ez, max_distance=3):
-    if not entity_iter:
+# Returns set of locatables near a line e.g. for magic ranged attacks
+def get_locatables_near_line(locatable_iter, x1, y1, z1, x2, y2, z2, lrud_dist=3):
+    if not locatable_iter:
         return None
+    lx = min(x1, x2)
+    ly = min(y1, y2)
+    lz = min(z1, z2)
+    hx = max(x1, x2)
+    hy = max(y1, y2)
+    hz = max(z1, z2)
     max_distance = math.abs(max_distance)
-    entity_set = set([])
+    locatable_set = set([])
     while True:
         try:
-            etv = next(entity_iter)
-            if not etv:
+            ltv = next(locatable_iter)
+            if not ltv:
                 continue
-            etd = common.get_distance_3d(ex,
-                                         ey,
-                                         ez,
-                                         etv.entity_data.x,
-                                         etv.entity_data.y,
-                                         etv.entity_data.z)
-            if ( etd <= max_distance ):
-                entity_set.add(etv)
+            # Filter 1 (rectangular)
+            if (ltv.x >= lx - lrud_dist) and (ltv.x <= hx + lrud_dist) and (ltv.y >= ly - lrud_dist) and (ltv.y <= hy + lrud_dist) and (ltv.z >= lz - lrud_dist) and (ltv.z <= hz + lrud_dist):
+                    dst = ( ( (hx - lx) * (hy - ly) * (hz - lz) ) - ( (ltv.x - lx) * (ltv.y - ly) * (ltv.z - lz) ) ) / math.sqrt( math.hypot(hx - lx) + math.hypot(hy - ly) + math.hypot(hz - lz) )
+                    # Filter 2 (point-line-distance)
+                    if (dst <= lrud_dist):
+                        locatable_set.add(ltv)
         except StopIteration:
             break
         except:
             continue
-    return entity_set
+    return locatable_set
 
-# Returns single closest entity in range
-def get_closest_entity(entity_iter, ex, ey, ez, max_distance=3):
-    if not entity_iter:
+# Returns set of locatables in range
+def get_locatables_in_range(locatable_iter, lx, ly, lz, max_distance=3):
+    if not locatable_iter:
+        return None
+    max_distance = math.abs(max_distance)
+    locatable_set = set([])
+    while True:
+        try:
+            ltv = next(locatable_iter)
+            if not ltv:
+                continue
+            ltd = common.get_distance_3d(lx,
+                                         ly,
+                                         lz,
+                                         ltv.x,
+                                         ltv.y,
+                                         ltv.z)
+            if ( ltd <= max_distance ):
+                locatable_set.add(ltv)
+        except StopIteration:
+            break
+        except:
+            continue
+    return locatable_set
+
+# Returns single closest locatable in range
+def get_closest_locatable(locatable_iter, lx, ly, lz, max_distance=3):
+    if not locatable_iter:
         return None
     max_distance = math.abs(max_distance)
     closest_dst = None
-    closest_ent = None
+    closest_lct = None
     while True:
         try:
-            etv = next(entity_iter)
-            if not etv:
+            ltv = next(locatable_iter)
+            if not ltv:
                 continue
-            etd = common.get_distance_3d(ex,
-                                         ey,
-                                         ez,
-                                         etv.entity_data.x,
-                                         etv.entity_data.y,
-                                         etv.entity_data.z)
-            if ( (not max_distance) or (etd <= max_distance) ) and ( (not closest_dst) or (not closest_ent) or (etd < closest_dst) ):
-                closest_dst = etd
-                closest_ent = etv
+            ltd = common.get_distance_3d(lx,
+                                         ly,
+                                         lz,
+                                         ltv.x,
+                                         ltv.y,
+                                         ltv.z)
+            if ( (not max_distance) or (ltd <= max_distance) ) and ( (not closest_dst) or (not closest_ent) or (ltd < closest_dst) ):
+                closest_dst = ltd
+                closest_lct = ltv
         except StopIteration:
             break
         except:
             continue
-    return closest_ent
+    return closest_lct
 
 def get_scaled_xy(px, py, pscale):
     return list(math.floor( px / pscale ),
@@ -94,13 +119,21 @@ def get_scaled_min_max_xy(rx, ry, rdist, rscale):
                 math.ceil(  ry_center + rdist_scaled ))
 
 
-class Chunk(Loader):
+class Locatable(object):
+    def __init__(self, x, y, z, id, obj=None):
+        self.x = x
+        self.y = y
+        self.z = z
+        self.id = id
+        self.obj = obj
+
+class Chunk(object):
     # chunk_pos = Vector2 of chunk position within sector
     def __init__(self, sector, cx, cy):
         self.sector = sector
         self.chunk_x = cx
         self.chunk_y = cy
-        self.entities = set()
+        self.locatables = {}
 
     def is_in_chunk(self, px, py):
         mmp = get_scaled_xy( px, py, constants.CHUNK_SCALE )
@@ -108,34 +141,33 @@ class Chunk(Loader):
             return True
         return False
 
-    # Returns single closest entity
-    def get_entity(self, ex, ey, ez, max_distance=3):
-        if len(self.entities) < 1:
+    # Returns single closest locatable
+    def get_locatable(self, lx, ly, lz, max_distance=3):
+        if len(self.locatables) < 1:
             return None
-        if is_in_chunk(ex, ey) is False:
-            return None
-        return get_closest_entity( iter(self.entities), ex, ey, ez, max_distance )
+        return get_closest_locatable( self.locatables.itervalues(), lx, ly, lz, max_distance )
 
-    # Returns set of entities in range
-    def get_entities(self, ex, ey, ez, max_distance=3):
-        if len(self.entities) < 1:
+    # Returns set of locatables in range
+    def get_locatables(self, lx, ly, lz, max_distance=3):
+        if len(self.locatables) < 1:
             return None
-        if is_in_chunk(ex, ey) is False:
-            return None
-        return get_entities_in_range( iter(self.entities), ex, ey, ez, max_distance )
+        return get_locatables_in_range( self.locatables.itervalues(), lx, ly, lz, max_distance )
 
-    def register_entity(self, entity):
-        if not entity:
+    def get_locatables_iter(self):
+        return iter(self.locatables)
+
+    def register_locatable(self, locatable):
+        if not locatable:
             return
-        self.entities.add(entity)
+        self.locatables[locatable.id] = locatable
 
-    def unregister_entity(self, entity):
-        if (not entity) or (len(self.entities) < 1):
+    def unregister_locatable(self, locatable):
+        if (not locatable) or (len(self.locatables) < 1):
             return None
-        return self.entities.pop(entity)
+        return self.locatables.pop(locatable.id, None)
 
 
-class Sector(Loader):
+class Sector(object):
     def __init__(self, world, sx, sy):
         self.world = world
         self.sector_x = sx
@@ -164,49 +196,46 @@ class Sector(Loader):
                                         math.floor( py / constants.CHUNK_SCALE))
 
     # 2 step targeting (WorldSector -> WorldChunks)
-    # Returns entities within max_distance
-    def get_entities(self, ex, ey, ez, max_distance=3):
-        entitites = set()
+    # Returns locatables within max_distance
+    def get_locatables(self, lx, ly, lz, max_distance=3):
+        locatables = set()
         # scale down to chunks
-        rngs = get_scaled_min_max_xy( ex, ey, max_distance, constants.CHUNK_SCALE )
+        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.CHUNK_SCALE )
         # loop through chunks in within scaled max_distance
         for cx in range(rngs[0], rngs[1]):
             for cy in range(rngs[2], rngs[3]):
-                # get closest entities in current sector and add them to entities set
-                nec = self.get_chunk_unscaled(cx, cy).get_entities( ex, ey, ez, max_distance )
-                if not nec:
+                # get closest locatables in current sector and add them to locatables set
+                nlc = self.get_chunk_unscaled(cx, cy).get_locatables( lx, ly, lz, max_distance )
+                if not nlc:
                     continue
-                entities.update(nec)
-        return entities
+                locatables.update(nlc)
+        return locatables
 
-    # Returns single closest entity within max_distance
-    def get_entity(self, ex, ey, ez, max_distance=3):
-        entitites = set()
+    # Returns single closest locatable within max_distance
+    def get_locatable(self, lx, ly, lz, max_distance=3):
+        locatables = set()
         # scale down to chunks
-        rngs = get_scaled_min_max_xy( ex, ey, max_distance, constants.CHUNK_SCALE )
+        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.CHUNK_SCALE )
         # loop through sectors in within scaled max_distance
         for cx in range(rngs[0], rngs[1]):
             for cy in range(rngs[2], rngs[3]):
-                # get closest entities in current sector and add them to entities set
-                cen = self.get_chunk_unscaled(cx, cy).get_entity( ex, ey, ez, max_distance )
-                if not cen:
+                # get closest locatables in current sector and add them to locatables set
+                lcn = self.get_chunk_unscaled(cx, cy).get_locatable( lx, ly, lz, max_distance )
+                if not lcn:
                     continue
-                entities.add(cen)
-        if len(entities) < 1:
+                locatables.add(lcn)
+        if len(locatables) < 1:
             return None
-        return get_closest_entity( iter(entities), ex, ey, ez, max_distance )
+        return get_closest_locatable( iter(locatables), lx, ly, lz, max_distance )
 
-    def unregister_entity(self, entity, ex, ey):
-        return self.get_chunk_scaled(ex, ey).unregister_entity(entity, ex, ey)
+    def register_locatable(self, locatable):
+        self.get_chunk_scaled(locatable.x, locatable.y).register_locatable(locatable)
 
-    def register_entity_at(self, entity, ex, ey):
-        self.get_chunk_scaled(ex, ey).register_entity(entity, ex, ey)
-
-    def register_entity(self, entity):
-        self.get_chunk_scaled(entity.entity_data.x, entity.entity_data.y).register_entity(entity)
+    def unregister_locatable(self, locatable):
+        return self.get_chunk_scaled(locatable.x, locatable.y).unregister_locatable(locatable)
 
 
-class World(Loader):
+class World(object):
     def __init__(self, server, name=None):
         self.server = server
         self.name = name
@@ -235,53 +264,54 @@ class World(Loader):
                                          math.floor( py / constants.SECTOR_SCALE))
 
     # 3 step targeting (World -> WorldSectors -> WorldChunks)
-    # Returns entities within max_distance
-    def get_entities(self, ex, ey, ez, max_distance=3):
-        entitites = set()
+    # Returns locatables within max_distance
+    def get_locatables(self, lx, ly, lz, max_distance=3):
+        locatables = set()
         # scale down to sectors
-        rngs = get_scaled_min_max_xy( ex, ey, max_distance, constants.SECTOR_SCALE )
+        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.SECTOR_SCALE )
         # loop through sectors in within scaled max_distance
         for sx in range(rngs[0], rngs[1]):
             for sy in range(rngs[2], rngs[3]):
-                # get closest entities in current sector and add them to entities set
-                nes = self.get_sector_unscaled(sx, sy).get_entities( ex, ey, ez, max_distance )
-                if not nes:
+                # get closest locatables in current sector and add them to locatables set
+                lns = self.get_sector_unscaled(sx, sy).get_locatables( lx, ly, lz, max_distance )
+                if not lns:
                     continue
-                entities.update(nes)
-        return entities
+                locatables.update(lns)
+        return locatables
 
-    # Returns single closest entity within max_distance
-    def get_entity(self, ex, ey, ez, max_distance=3):
-        entitites = set()
+    # Returns single closest locatable within max_distance
+    def get_locatable(self, lx, ly, lz, max_distance=3):
+        locatables = set()
         # scale down to sectors
-        rngs = get_scaled_min_max_xy( ex, ey, max_distance, constants.SECTOR_SCALE )
+        rngs = get_scaled_min_max_xy( lx, ly, max_distance, constants.SECTOR_SCALE )
         # loop through sectors in within scaled max_distance
         for sx in range(rngs[0], rngs[1]):
             for sy in range(rngs[2], rngs[3]):
-                # get closest entities in current sector and add them to entities set
-                sen = self.get_sector_unscaled(sx, sy).get_entity( ex, ey, ez, max_distance )
-                if not sen:
+                # get closest locatables in current sector and add them to locatables set
+                lns = self.get_sector_unscaled(sx, sy).get_locatable( lx, ly, lz, max_distance )
+                if not lns:
                     continue
-                entities.add(sen)
-        if len(entities) < 1:
+                locatables.add(lns)
+        if len(locatables) < 1:
             return None
-        return get_closest_entity( iter(entities), ex, ey, ez, max_distance )
+        return get_closest_locatable( iter(locatables), lx, ly, lz, max_distance )
 
-    def unregister_entity(self, entity, ex, ey):
-        return self.get_sector_scaled(ex, ey).unregister_entity(entity, ex, ey)
+    def register_locatable(self, locatable):
+        self.get_sector_scaled(locatable.x, locatable.y).register_locatable(locatable)
 
-    def register_entity_at(self, entity, ex, ey):
-        self.get_sector_scaled(ex, ey).register_entity_at(entity, ex, ey)
-
-    def register_entity(self, entity):
-        self.get_sector_scaled(entity.entity_data.x, entity.entity_data.y).register_entity(entity)
+    def unregister_locatable(self, locatable):
+        return self.get_sector_scaled(locatable.x, locatable.y).unregister_locatable(locatable)
 
     # unregisters from old chunk and registers in new
     # chunk only when moved from one chunk to another
-    def move_entity(self, entity, old_x, old_y, new_x, new_y):
-        old_chunk_pos = get_scaled_xy( old_x, old_y, constants.CHUNK_SCALE )
-        new_chunk_pos = get_scaled_xy( new_x, new_y, constants.CHUNK_SCALE )
-        if (old_chunk_pos[0] == new_chunk_pos[0]) or (old_chunk_pos[1] == new_chunk_pos[1]):
-            return
-        self.unregister_entity(entity, old_x, old_y)
-        self.register_entity_at(entity, new_x, new_y)
+    def move_locatable(self, locatable, new_x, new_y, new_z):
+        locatable.z = new_z
+        if (new_x != locatable.x) or (new_y != locatable.y):
+            old_chunk_pos = get_scaled_xy( locatable.x, locatable.y, constants.CHUNK_SCALE )
+            new_chunk_pos = get_scaled_xy( new_x,       new_y,       constants.CHUNK_SCALE )
+            if (old_chunk_pos[0] == new_chunk_pos[0]) or (old_chunk_pos[1] == new_chunk_pos[1]):
+                return
+            self.unregister_locatable(locatable)
+            locatable.x = new_x
+            locatable.y = new_y
+            self.register_locatable(locatable)
