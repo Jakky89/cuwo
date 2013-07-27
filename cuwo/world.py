@@ -106,17 +106,17 @@ def get_closest_locatable(locatable_iter, lx, ly, lz, max_distance=3):
     return closest_lct
 
 def get_scaled_xy(px, py, pscale):
-    return list(math.floor( px / pscale ),
-                math.floor( py / pscale ))
+    return (int( math.floor( px / pscale ) ),
+            int( math.floor( py / pscale ) ))
 
 def get_scaled_min_max_xy(rx, ry, rdist, rscale):
     rx_center = rx / rscale
     ry_center = ry / rscale
     rdist_scaled = math.ceil( rdist / rscale )
-    return list(math.floor( rx_center - rdist_scaled ),
-                math.ceil(  rx_center + rdist_scaled ),
-                math.floor( ry_center - rdist_scaled ),
-                math.ceil(  ry_center + rdist_scaled ))
+    return (int( math.floor( rx_center - rdist_scaled ) ),
+            int( math.ceil(  rx_center + rdist_scaled ) ),
+            int( math.floor( ry_center - rdist_scaled ) ),
+            int( math.ceil(  ry_center + rdist_scaled ) ))
 
 
 class Locatable(object):
@@ -277,17 +277,15 @@ class World(object):
             return None
         return self.get_chunk_scaled(ret.x, ret.y).unregister(id)
 
-
     # unregisters from old chunk and registers in new
     # chunk only when moved from one chunk to another
-    def move_locatable(self, locatable, new_x, new_y, new_z):
-        locatable.z = new_z
-        if (new_x != locatable.x) or (new_y != locatable.y):
-            old_chunk_pos = get_scaled_xy( locatable.x, locatable.y, constants.CHUNK_SCALE )
-            new_chunk_pos = get_scaled_xy( new_x,       new_y,       constants.CHUNK_SCALE )
-            if (old_chunk_pos[0] == new_chunk_pos[0]) or (old_chunk_pos[1] == new_chunk_pos[1]):
-                return
-            self.unregister_locatable(locatable)
-            locatable.x = new_x
-            locatable.y = new_y
-            self.register_locatable(locatable)
+    def move_locatable(self, id, new_x, new_y, new_z):
+        lct = self.locatables.get(id, None)
+        if not lct:
+            return
+        lct.z = new_z
+        if (new_x != lct.x) or (new_y != lct.y):
+            self.get_chunk_scaled(lct.x, lct.y).unregister(id)
+            lct.x = new_x
+            lct.y = new_y
+            self.get_chunk_scaled(new_x, new_y).register_locatable(lct)

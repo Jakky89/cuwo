@@ -128,9 +128,12 @@ def parse_command(message):
     try:
         args = shlex.split(message)
     except ValueError:
+        # shlex failed. let's just split per space
         args = message.split(' ')
     if args:
         command = args.pop(0)
+    else:
+        command = ''
     return command.decode('utf-8'), [arg.decode('utf-8') for arg in args]
 
 
@@ -145,7 +148,7 @@ def create_path(path):
     return False
 
 
-def create_file_path(path):
+def create_file_path(filename):
     return create_path(os.path.dirname(filename))
 
 

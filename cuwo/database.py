@@ -47,7 +47,6 @@ def get_connection():
         print '[DATABASE ERROR] Could not connect to database: %s' % e.args[0]
     except Exception, e:
         print '[DATABASE ERROR] Could not connect to database: %s' % e
-    sys.exit(1)
     return None
 
 
@@ -62,8 +61,6 @@ def close_connection(db_con):
 
 def create_structure(db_con=None):
     try:
-        if os.path.isfile(constants.DATABASE_NAME):
-            return
         if not db_con:
             db_con = get_connection()
         db_cur = db_con.cursor()
@@ -89,7 +86,6 @@ def create_structure(db_con=None):
         print '[DATABASE ERROR] Could not create database structure: %s' % e.args[0]
     except:
         print '[DATABASE ERROR] Exception occurred while creating database structure!'
-    sys.exit(1)
     return False
 
 

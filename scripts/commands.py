@@ -20,17 +20,17 @@ Default set of commands bundled with cuwo
 """
 
 from cuwo.script import ServerScript, command, admin
-from cuwo.common import get_chunk
-from cuwo.packet import HitPacket, HIT_NORMAL
 from cuwo.vector import Vector3
+from cuwo.common import (get_chunk, get_entity_type_level_str)
 from twisted.internet import reactor
-import cuwo.database
 
 import platform
 import sys
+import cuwo.database
 
 
-
+class CommandServer(ServerScript):
+    pass
 
 
 def get_class():
@@ -61,7 +61,7 @@ def kick(script, name):
 @admin
 def kill(script, name=None):
     player = script.get_player(name)
-    player.kill(script.connection):
+    player.kill(script.connection)
     return None
 
 
@@ -136,7 +136,7 @@ def spawn(script):
 
 @command
 def help(script):
-    return PLAYER_COMMANDS_HELP
+    return script.server.config.base.help_players
 
 
 @command
@@ -145,31 +145,9 @@ def list(script):
     if plcount <= 0:
         return '[INFO] There are currently no players online.'
     plrs = []
-     for player in server.players.values():
-        player.append('%s (%s)' % (player.entity_data.name, common.get_entity_type_level_str(player.entity_data))
+    for player in script.server.players.values():
+        plrs.append('%s (%s)' % (player.entity_data.name, get_entity_type_level_str(player.entity_data)))
     return '[INFO] %s/%s players online: %s' % (plcount, config.max_players, ', '.join(plrs))
-
-
-@command
-def register(script, password)
-    if not password:
-        return '[INFO] Register with password to get your login id for future logins: /register <password>'
-    reg_id = database.register_player(script.server.db_con, script.connection.entity_data.name, password)
-    if reg_id:
-        return '[REGISTRATION] Please note that you have to do /login %s %s now to log in.' % (reg_id, password)
-    return '[ERROR] Could not register!'
-
-
-@command
-def login(script, id, password):
-    if not id or not password:
-        return '[INFO] Command to login with your ID and password: /login <ID> <password>'
-    login_res = database.login_player(script.server.db_con, script.connection.entity_data.name, id, password)
-    if not login_res:
-        return '[LOGIN] Login failed!'
-    else:
-        return '[LOGIN] Successfully logged in!' % id)
-    return '[ERROR] Invalid password!'
 
 
 @command

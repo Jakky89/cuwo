@@ -1,4 +1,4 @@
-# Copyright (c) Mathias Kaerlev, Somer Hayter, sarcengm and Jakky89 2013.
+# Copyright (c) Mathias Kaerlev 2013.
 #
 # This file is part of cuwo.
 #
@@ -73,13 +73,6 @@ def admin(func):
     return restrict(func, 'admin')
 
 
-def call_scripts(scripts, name, *arg, **kw):
-    for script in scripts:
-        ret = script.call(name, *arg, **kw)
-        if ret is not None:
-            return ret
-
-
 class ScriptManager(object):
     """
     Manages scripts for either a server or connection
@@ -146,7 +139,6 @@ class BaseScript(object):
         pass
 
 
-
 class ConnectionScript(BaseScript):
     def __init__(self, parent, connection):
         self.script_name = parent.script_name
@@ -158,18 +150,12 @@ class ConnectionScript(BaseScript):
         parent.children.append(self)
         self.on_load()
 
-    def get_player(self, name=None):
-        if name is None:
-            return self.connection
-        return get_player(self.server, name)
-
     def on_disconnect(self, event):
         self.unload()
 
     def on_command(self, event):
         ret = self.parent.call_command(self, event.command, event.args)
         if ret is None:
-            self.connection.send_chat('No commands available!')
             return
         if ret:
             self.connection.send_chat(ret)
@@ -206,7 +192,7 @@ class ServerScript(BaseScript):
     def on_new_connection(self, event):
         if self.connection_class is None:
             return
-        script = script = self.connection_class(self, event.connection)
+        script = self.connection_class(self, event.connection)
         script.call('on_connect')
 
     def on_existing_connection(self, event):
@@ -231,7 +217,7 @@ class ServerScript(BaseScript):
         if self.commands is None:
             return
         f = self.commands.get(command, None)
-        if f is None:
+        if not f:
             return
         try:
             ret = f(user, *args) or ''
@@ -251,6 +237,7 @@ class ScriptInterface(object):
     Used for external script interfaces to emulate a connection for e.g.
     console and IRC commands
     """
+
     def __init__(self, server, *rights):
         self.rights = AttributeSet(rights)
         self.server = server
