@@ -34,10 +34,11 @@ class VersusServer(ServerScript):
 
     def update(self, event):
         for player in self.server.players.values():
-            if not connection.has_joined:
-                continue
-            data = connection.entity_data
+            data = player.entity_data
             data.flags_1 |= FLAGS_1_HOSTILE
+
+    def get_mode(self, event):
+        return 'pvp'
 
 
 def get_class():

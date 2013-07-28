@@ -44,6 +44,7 @@ class LogServer(ServerScript):
             logging_file = open_create(logfile, 'a')
         self.file_observer = log.FileLogObserver(logging_file)
         log.addObserver(self.file_observer.emit)
+        log.msg('cuwo server started on %s' % time.strftime('%c'))
         self.observer = log.startLogging(sys.stdout)  # force twisted logging
 
     def on_unload(self):

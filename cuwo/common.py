@@ -15,6 +15,11 @@
 # You should have received a copy of the GNU General Public License
 # along with cuwo.  If not, see <http://www.gnu.org/licenses/>.
 
+
+# INTERNALS: http://www.cubeworldwiki.net/index.php/Internals
+
+
+
 from cuwo import constants
 
 import shlex
@@ -94,8 +99,8 @@ def get_needed_total_xp(level):
     return math.floor(50 * (21 * (level - 1) + 400 * math.log(20) - 400 * math.log(19 + level)))
 
 
-def get_xp_from_to_level(levelFrom, levelTo):
-    return math.floor(50 * (21 * (levelTo - levelFrom) + 400 * math.log(19 + levelFrom) - 400 * math.log(19 + levelTo)))
+def get_xp_from_to_level(level_from, level_to):
+    return math.floor(50 * (21 * (level_to - level_from) + 400 * math.log(19 + level_from) - 400 * math.log(19 + level_to)))
 
 
 def get_power_level(level):

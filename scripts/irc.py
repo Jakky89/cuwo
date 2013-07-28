@@ -22,10 +22,8 @@ IRC client that can be used as a way to control the game server
 from twisted.words.protocols import irc
 from twisted.internet import reactor, protocol
 from cuwo.common import parse_command
-from cuwo.script import ServerScript, ConnectionScript
+from cuwo.script import ServerScript, ConnectionScript, ScriptInterface
 
-import random
-import string
 
 def channel(func):
     def new_func(self, user, channel, *arg, **kw):
@@ -35,30 +33,35 @@ def channel(func):
         func(self, user, channel, *arg, **kw)
     return new_func
 
-MAX_IRC_CHAT_SIZE = 50
+MAX_IRC_CHAT_SIZE = 100
+
 
 def encode_irc(value):
     return value.encode('ascii', 'replace')
+
 
 class IRCBot(irc.IRCClient):
     ops = None
     voices = None
     commands = {}
-    
+
     def __init__(self, factory, server):
         self.server = server
         self.factory = factory
         self.nickname = factory.nickname
+        self.password = factory.password
+        self.channel_password = factory.channel_password
+        self.interface = ScriptInterface(server, 'admin', 'irc')
 
     def signedOn(self):
-        self.join(self.factory.channel, self.factory.password)
-    
+        self.join(self.factory.channel, self.factory.channel_password)
+
     def joined(self, channel):
         if channel.lower() == self.factory.channel:
             self.ops = set()
             self.voices = set()
         print "Joined channel %s" % channel
-    
+
     def irc_NICK(self, prefix, params):
         user = prefix.split('!', 1)[0]
         new_user = params[0]
@@ -68,24 +71,24 @@ class IRCBot(irc.IRCClient):
         if user in self.voices:
             self.voices.discard(user)
             self.voices.add(new_user)
-    
+
     def irc_RPL_NAMREPLY(self, *arg):
         if not arg[1][2].lower() == self.factory.channel:
             return
         for name in arg[1][3].split():
             mode = name[0]
             l = {'@': self.ops, '+': self.voices}
-            if mode in l: 
+            if mode in l:
                 l[mode].add(name[1:])
-    
+
     def left(self, channel):
         if channel.lower() == self.factory.channel:
             self.ops = None
             self.voices = None
-    
+
     @channel
     def modeChanged(self, user, channel, set, modes, args):
-        ll = {'o' : self.ops, 'v' : self.voices}
+        ll = {'o': self.ops, 'v': self.voices}
         for i in range(len(args)):
             mode, name = modes[i], args[i]
             if mode not in ll:
@@ -95,7 +98,7 @@ class IRCBot(irc.IRCClient):
                 l.add(name)
             elif not set:
                 l.discard(name)
-    
+
     @channel
     def privmsg(self, user, channel, msg):
         if user in self.ops or user in self.voices:
@@ -104,8 +107,9 @@ class IRCBot(irc.IRCClient):
             if msg.startswith(self.factory.commandprefix) and user in self.ops:
                 cmd = msg[len(self.factory.commandprefix):]
                 result = self.handle_command(name, cmd)
-                if result is not None:
-                    self.send("%s: %s" % (user, result))
+                if result is None:
+                    return
+                self.send("%s: %s" % (user, result))
             elif msg.startswith(self.factory.chatprefix):
                 msg = msg[len(self.factory.chatprefix):].strip()
                 message = ("<%s> %s" % (name, msg))
@@ -118,8 +122,12 @@ class IRCBot(irc.IRCClient):
         try:
             return self.commands[command](self, *args)
         except KeyError:
-            return 'Invalid command'
-    
+            pass
+        ret = self.server.call_command(self.interface, command, args)
+        if ret is not None:
+            return ret
+        return 'Invalid command'
+
     @channel
     def userLeft(self, user, channel):
         self.ops.discard(user)
@@ -130,99 +138,114 @@ class IRCBot(irc.IRCClient):
 
     def userKicked(self, kickee, channel, kicker, message):
         self.userLeft(kickee, channel)
-    
+
     def send(self, msg):
         self.msg(self.factory.channel, encode_irc(msg))
-    
+
     def me(self, msg):
         self.describe(self.factory.channel, encode_irc(msg))
+
 
 class IRCClientFactory(protocol.ClientFactory):
     lost_reconnect_delay = 20
     failed_reconnect_delay = 60
     bot = None
-    
+
     def __init__(self, server, config):
         self.server = server
-        self.nickname = config.irc_nickname
+        irc = config.irc
+        self.nickname = irc.nickname
         self.username = 'cuwo'
-        self.realname = config.server_name
-        self.channel = config.irc_channel
-        self.commandprefix = config.irc_commandprefix
-        self.chatprefix = config.irc_chatprefix
-        self.password = config.irc_password
-    
+        self.realname = config.base.server_name
+        self.channel = irc.channel
+        self.commandprefix = irc.commandprefix
+        self.chatprefix = irc.chatprefix
+        self.password = irc.password
+        self.channel_password = irc.channel_password
+        self.rights = irc.rights
+
     def startedConnecting(self, connector):
         print "Connecting to IRC server..."
-    
+
     def clientConnectionLost(self, connector, reason):
-        print "Lost connection to IRC server (%s), reconnecting in %s seconds" % (
-            reason, self.lost_reconnect_delay)
+        print "Lost connection to IRC server (%s), " \
+              "reconnecting in %s seconds" % (reason,
+                                              self.lost_reconnect_delay)
         reactor.callLater(self.lost_reconnect_delay, connector.connect)
-    
+
     def clientConnectionFailed(self, connector, reason):
-        print "Could not connect to IRC server (%s), retrying in %s seconds" % (
-            reason, self.failed_reconnect_delay)
+        print "Could not connect to IRC server (%s), " \
+              "retrying in %s seconds" % (reason, self.failed_reconnect_delay)
         reactor.callLater(self.failed_reconnect_delay, connector.connect)
-    
+
     def buildProtocol(self, address):
         self.bot = IRCBot(self, self.server)
         return self.bot
 
-class IRCScriptProtocol(ConnectionScript):
-    def on_join(self):
+
+class IRCScriptConnection(ConnectionScript):
+    def on_join(self, event):
         self.parent.send('* %s entered the game' % encode_irc(
             self.connection.name))
 
     def on_unload(self):
+        if not self.connection.has_joined:
+            return
         self.parent.send('* %s disconnected' % encode_irc(
             self.connection.name))
 
-    def on_chat(self, message):
-        message = encode_irc('<%s> %s' % (self.connection.name, message))
+    def on_chat(self, event):
+        message = encode_irc('<\x036%s\x0F> %s' % (
+            self.connection.name, event.message))
         self.parent.send(message)
 
-class IRCScriptFactory(ServerScript):
-    connection_class = IRCScriptProtocol
-    
+
+class IRCScriptServer(ServerScript):
+    connection_class = IRCScriptConnection
+
     def on_load(self):
         config = self.server.config
         self.client_factory = IRCClientFactory(self.server, config)
-        reactor.connectTCP(config.irc_server, config.irc_port,
-            self.client_factory)
+        self.server.connect_tcp(config.irc.server, config.irc.port,
+                                self.client_factory)
 
     def on_unload(self):
         # XXX implement unload
         pass
-    
+
     def send(self, *arg, **kw):
         if self.client_factory.bot is None:
             return
         self.client_factory.bot.send(*arg, **kw)
-    
+
     def me(self, *arg, **kw):
         if self.client_factory.bot is None:
             return
         self.client_factory.bot.me(*arg, **kw)
 
+
 def get_class():
-    return IRCScriptFactory
+    return IRCScriptServer
+
 
 def irc(func):
     IRCBot.commands[func.func_name] = func
     return func
 
+
 @irc
 def who(bot):
+    """
+    Reimplemented here for the purpose of coloring the chat
+    """
     server = bot.server
-    player_count = len(server.connections)
+    player_count = len(server.players)
     if player_count == 0:
         bot.me('has no players connected')
         return
     formatted_names = []
-    for connection in server.connections.values():
-        name = '\x0302%s #%s' % (encode_irc(connection.name), 
-                                 connection.entity_id)
+    for player in server.players.values():
+        name = '\x0302%s #%s' % (encode_irc(player.name), player.entity_id)
         formatted_names.append(name)
     noun = 'player' if player_count == 1 else 'players'
     msg = 'has %s %s connected: ' % (player_count, noun)

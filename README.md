@@ -128,6 +128,8 @@ ZeZeene - web interface for master server
 
 Kyle - master server JS
 
+MazeXD - master server JS and design
+
 Kainzo - Testing
 
 uwee - protocol variables
