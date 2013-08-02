@@ -142,7 +142,7 @@ class CubeWorldConnection(Protocol):
         if self.connection_state < 0:
             return
         self.server.connections.discard(self)
-        if self.connection_state > 0:
+        if self.connection_state >= 3:
             del self.server.players[self.entity_id]
             print '[INFO] Player %s #%s left the game.' % (self.name, self.entity_id)
             self.server.send_chat('<<< %s #%s left the game' % (self.name, self.entity_id))
@@ -185,13 +185,11 @@ class CubeWorldConnection(Protocol):
         if self.entity_data is None:
             self.entity_data = create_entity_data()
             self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
-
         mask = packet.update_entity(self.entity_data)
         self.entity_data.mask |= mask
         if self.connection_state==2 and getattr(self.entity_data, 'name', None):
             self.on_join()
             return
-
         self.scripts.call('on_entity_update', mask=mask)
         if entity.is_pos_set(mask):
             self.check_pos()
