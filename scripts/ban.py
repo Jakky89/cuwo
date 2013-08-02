@@ -19,16 +19,22 @@
 Ban management
 """
 
+<<<<<<< HEAD
 from cuwo.script import ServerScript, command, admin, get_player
+=======
+from cuwo.script import (ServerScript, ConnectionScript, command, admin, get_player)
+from twisted.internet import reactor
+from cuwo import database
+>>>>>>> mitm
 
-SELF_BANNED = 'You are banned: {reason}'
+SELF_BANNED = 'You are banned from this server!'
 PLAYER_BANNED = '{name} has been banned: {reason}'
 DEFAULT_REASON = 'No reason specified'
 
-DATA_NAME = 'banlist'
 
 
 class BanServer(ServerScript):
+<<<<<<< HEAD
     def on_load(self):
         self.ban_entries = self.server.load_data(DATA_NAME, {})
 
@@ -58,6 +64,17 @@ class BanServer(ServerScript):
             return
         return SELF_BANNED.format(reason=reason)
 
+=======
+    def ban(self, player_name, ip_address, ban_reason=None):
+        database.ban_ip(self.server.db_con, ip_address, script.entity_data.name, reactor.seconds()+86400, ban_reason)
+        for connection in self.server.connections.copy():
+            if connection.address.host != ip_address:
+                continue
+            connection.kick(SELF_BANNED)
+        message = PLAYER_BANNED.format(name = player_name, reason = ban_reason)
+        print message
+        self.server.send_chat(message)
+>>>>>>> mitm
 
 def get_class():
     return BanServer
@@ -68,4 +85,4 @@ def get_class():
 def ban(script, name, *args):
     player = get_player(script.server, name)
     reason = ' '.join(args) or DEFAULT_REASON
-    script.parent.ban(player.address.host, reason)
+    script.parent.ban(player.name, player.address.host, reason)

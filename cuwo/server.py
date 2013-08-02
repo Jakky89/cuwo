@@ -143,9 +143,9 @@ class CubeWorldConnection(Protocol):
             return
         self.server.connections.discard(self)
         if self.connection_state > 0:
-            del self.server.players[self]
-            print '[INFO] Player %s left the game.' % self.name
-            self.server.send_chat('<<< %s left the game' % self.name)
+            del self.server.players[self.entity_id]
+            print '[INFO] Player %s #%s left the game.' % (self.name, self.entity_id)
+            self.server.send_chat('<<< %s #%s left the game' % (self.name, self.entity_id))
         self.connection_state = -1
         if self.entity_id is not None:
             self.server.world.unregister(self.entity_id)
@@ -354,17 +354,18 @@ class CubeWorldConnection(Protocol):
             self.server.send_chat('[ANTICHEAT] Player %s (%s) has been kicked for cheating.' % (self.name,
                                                                                                 get_entity_type_level_str(self.entity_data)))
             return
-        print '>>> Player %s #%s (%s) [%s] joined the game' % (self.name,
-                                                               get_entity_type_level_str(self.entity_data),
-                                                               self.entity_id,
-                                                               self.address.host)
-        self.server.send_chat('>>> %s (%s) joined the game' % (self.name,
-                                                               get_entity_type_level_str(self.entity_data)))
+        print '>>> Player %s %s #%s [%s] joined the game' % (self.name,
+                                                             get_entity_type_level_str(self.entity_data),
+                                                             self.entity_id,
+                                                             self.address.host)
+        self.server.send_chat('>>> %s #%s (%s) joined the game' % (self.name,
+                                                                   self.entity_id,
+                                                                   get_entity_type_level_str(self.entity_data)))
         # connection successful -> continue
         for player in self.server.players.values():
             entity_packet.set_entity(player.entity_data, player.entity_id)
             self.send_packet(entity_packet)
-        self.server.players[(self.entity_id,)] = self
+        self.server.players[self.entity_id] = self
         self.connection_state = 3
 
     def on_command(self, command, parameters):
@@ -372,7 +373,7 @@ class CubeWorldConnection(Protocol):
         if ( (not parameters) or (command == 'register') or (command == 'login') ):
             print '[COMMAND] %s: /%s' % (self.name, command)
         else:
-            print '[COMMAND] %s: /%s' % (self.name, command, ' '.join(parameters))
+            print '[COMMAND] %s: /%s %s' % (self.name, command, ' '.join(parameters))
 
     def on_chat(self, message):
         if self.time_last_chat < int(reactor.seconds() - constants.ANTISPAM_LIMIT_CHAT):
@@ -670,6 +671,10 @@ class CubeWorldServer(Factory):
                     connection.disconnect()
         if con_remain <= 0:
             return
+        self.db_con = database.get_connection()
+        if database.is_banned_ip(self.db_con, addr.host):
+            print '[INFO] Banned client %s tried to join.' % addr.host
+            return 'You are banned from this server.'
         ret = self.scripts.call('on_connection_attempt', address=addr).result
         if ret is False:
             print '[WARNING] Connection attempt for %s blocked by script!' % addr.host
@@ -931,6 +936,8 @@ def main():
     else:
         import cProfile
         cProfile.run('reactor.run()', filename=config.base.profile_file)
+
+    database.close_connection(server.db_con)
 
     sys.exit(server.exit_code)
 

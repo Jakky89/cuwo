@@ -78,22 +78,6 @@ build/
 *.log
 *.scc
 
-# Visual C++ cache files
-ipch/
-*.aps
-*.ncb
-*.opensdf
-*.sdf
-*.cachefile
-
-# Visual Studio profiler
-*.psess
-*.vsp
-*.vspx
-
-# Guidance Automation Toolkit
-*.gpState
-
 # ReSharper is a .NET coding add-in
 _ReSharper*/
 *.[Rr]e[Ss]harper
@@ -150,6 +134,8 @@ ClientBin/
 *.[Pp]ublish.xml
 *.pfx
 *.publishsettings
+*.db
+*.sqlite
 
 # RIA/Silverlight projects
 Generated_Code/
@@ -213,3 +199,8 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+*.exe
+*.dll
+*.cab
+log.txt

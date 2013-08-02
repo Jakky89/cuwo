@@ -579,11 +579,11 @@ class ServerChatMessage(Packet):
         self.entity_id = reader.read_uint64()
         size = reader.read_uint32()
         data = reader.read(size * 2)
-        self.value = data.decode(ENCODING)
+        self.value = data.decode(self.ENCODING)
 
     def write(self, writer):
         writer.write_uint64(self.entity_id)
-        data = self.value.encode(ENCODING)
+        data = self.value.encode(self.ENCODING)
         writer.write_uint32(len(data) / 2)
         writer.write(data)
 
@@ -592,10 +592,10 @@ class ClientChatMessage(Packet):
     def read(self, reader):
         size = reader.read_uint32()
         data = reader.read(size * 2)
-        self.value = data.decode(ENCODING)
+        self.value = data.decode(self.ENCODING)
 
     def write(self, writer):
-        data = self.value.encode(ENCODING)
+        data = self.value.encode(self.ENCODING)
         writer.write_uint32(len(data) / 2)
         writer.write(data)
 
