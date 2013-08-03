@@ -71,6 +71,7 @@ class CubeWorldConnection(Protocol):
     connection_state = 0
     entity_id = None
     entity_data = None
+    login_id = None
     change_index = -1
     scripts = None
 
@@ -143,7 +144,7 @@ class CubeWorldConnection(Protocol):
             return
         self.server.connections.discard(self)
         if self.connection_state >= 3:
-            del self.server.players[self.entity_id]
+            del self.server.players[self]
             print '[INFO] Player %s #%s left the game.' % (self.name, self.entity_id)
             self.server.send_chat('<<< %s #%s left the game' % (self.name, self.entity_id))
         self.connection_state = -1
@@ -363,7 +364,7 @@ class CubeWorldConnection(Protocol):
         for player in self.server.players.values():
             entity_packet.set_entity(player.entity_data, player.entity_id)
             self.send_packet(entity_packet)
-        self.server.players[self.entity_id] = self
+        self.server.players[(self.entity_id,)] = self
         self.connection_state = 3
 
     def on_command(self, command, parameters):
@@ -642,9 +643,9 @@ class CubeWorldServer(Factory):
         # SERVER RELATED
         self.git_rev = base.get('git_rev', None)
 
-        self.passwords = {}
-        for k, v in base.passwords.iteritems():
-            self.passwords[k.lower()] = v
+        self.ranks = {}
+        for k, v in base.ranks.iteritems():
+            self.ranks[k.lower()] = v
 
         self.scripts = ScriptManager()
         for script in base.scripts:
@@ -750,6 +751,11 @@ class CubeWorldServer(Factory):
                                                           player.position.y,
                                                           player.position.z,
                                                           constants.MAX_DISTANCE)
+            if player.entity_data.mask > 0:
+                entity_packet.set_entity(player.entity_data, player.entity_id, player.entity_data.mask)
+                self.broadcast_packet(entity_packet)
+                player.entity_data.mask = 0
+            updated.add(player.entity_id)
             locatable_iter = iter(nearby_locatables)
             while True:
                 try:
@@ -771,12 +777,14 @@ class CubeWorldServer(Factory):
 
         if update_seconds_delta != 0:
             for player in self.players.values():
-                if player.time_last_packet > (uxtime - constants.CLIENT_RECV_TIMEOUT):
+                if player.time_last_packet >= (uxtime - constants.CLIENT_RECV_TIMEOUT):
                     if player.entity_data.changed:
                         player.entity_data.changed = False
                         ret = player.do_anticheat_actions()
+                        if (not ret) and player.login_id:
+                            database.update_player(self.db_con, player.login_id, player.name)
                 else:
-                    print '[WARNING] Connection timed out for Player %s (ID: %s)' % (player.entity_data.name, player.entity_id)
+                    print '[WARNING] Connection timed out for Player %s #%s' % (player.entity_data.name, player.entity_id)
                     player.kick('Connection timed out')
             self.broadcast_time()
 

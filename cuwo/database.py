@@ -55,6 +55,7 @@ def close_connection(db_con):
         return
     try:
         db_con.close()
+        print 'Database connection closed.'
     except:
         pass
 
@@ -65,8 +66,7 @@ def create_structure(db_con=None):
             db_con = get_connection()
         db_cur = db_con.cursor()
         db_cur.executescript("""
-            CREATE TABLE IF NOT EXISTS players(id INTEGER PRIMARY KEY AUTOINCREMENT, ingame_name VARCHAR(100) NOT NULL, password_hash TINYBLOB, last_ip VARCHAR(100) DEFAULT NULL, last_online UNSIGNED BIG INT DEFAULT NULL, online_seconds UNSIGNED BIG INT DEFAULT NULL);
-            CREATE TABLE IF NOT EXISTS player_permissions(player_id INTEGER, permission_type TINYINT(2), permission_node VARCHAR(100) NOT NULL);
+            CREATE TABLE IF NOT EXISTS players(id INTEGER PRIMARY KEY AUTOINCREMENT, ingame_name VARCHAR(100) NOT NULL, password_hash TINYBLOB, last_ip VARCHAR(100) DEFAULT NULL, last_online UNSIGNED BIG INT DEFAULT NULL, online_seconds UNSIGNED BIG INT DEFAULT NULL, rank VARCHAR(100) DEFAULT NULL);
             CREATE TABLE IF NOT EXISTS player_bans(player_id INTEGER DEFAULT NULL, ip_address VARCHAR(100) NOT NULL UNIQUE, banned_by INTEGER DEFAULT NULL, banned_since UNSIGNED BIG INT NOT NULL, banned_until UNSIGNED BIG INT DEFAULT NULL, reason TEXT DEFAULT NULL);
             CREATE TABLE IF NOT EXISTS player_inventories(player_id INTEGER, slot_index INTEGER, item_type INTEGER, item_subtype INTEGER DEFAULT NULL);
             CREATE TABLE IF NOT EXISTS kv_data(data_key VARCHAR(64) PRIMARY KEY, data_value BLOB DEFAULT NULL);
@@ -137,26 +137,26 @@ def load_data(db_con, data_key, default_value=None, important=False):
     return default_value
 
 
-def register_player(db_con, player, password):
-    if not player:
+def register_player(db_con, player_name, player_ip, player_password):
+    if not player_name:
         return None
-    if not password:
+    if not player_password:
         return None
     try:
         if not db_con:
             db_con = get_connection()
         db_cur = db_con.cursor()
-        pw_hash_bin = common.sha224_bin(password, config.password_salt)
-        db_cur.execute("INSERT INTO players (ingame_name, password_hash, last_ip, last_online, online_seconds) VALUES ('?', ?, '?', ?, 0)", [player.name, sql_db.Binary(pw_hash_bin), player.addr.host, reactor.seconds()])
+        pw_hash_bin = common.sha224_bin(player_password, config.password_salt)
+        db_cur.execute("INSERT INTO players (ingame_name, password_hash, last_ip, last_online, online_seconds, rank) VALUES ('?', ?, '?', ?, 0, 'default')", [player_name.lower(), sql_db.Binary(pw_hash_bin), player_ip, reactor.seconds()])
         db_con.commit()
-        if db_cur.rowcount==1:
+        if db_cur.rowcount == 1:
             return db_cur.lastrowid
     except:
         pass
     return None
 
 
-def login_player(db_con, player_name, player_id, player_password):
+def login_player(db_con, player_id, player_password):
     if not player_id:
         return False
     if not player_password:
@@ -165,21 +165,20 @@ def login_player(db_con, player_name, player_id, player_password):
         if not db_con:
             db_con = get_connection()
         db_cur = db_con.cursor()
-        pw_hash_bin = common.sha224_bin(player_password, config.password_salt)
-        db_cur.execute("SELECT ingame_name, last_ip, last_online, online_seconds FROM players WHERE id=? AND password=?", [player_name, player_id, sql_db.Binary(pw_hash_bin)])
-        if db_cur.rowcount==1:
+        pw_hash_bin = common.sha224_bin(player_password, config.base.password_salt)
+        db_cur.execute("SELECT ingame_name, rank, last_ip, last_online, online_seconds FROM players WHERE id=? AND password=?", [player_id, sql_db.Binary(pw_hash_bin)])
+        if db_cur.rowcount == 1:
             data_row = db_cur.fetchone()
             if data_row is not None:
                 return data_row
-        elif  db_cur.rowcount>1:
-            print '[ERROR] Got more than one player from the database using the same ID: %s!' % player_id
     except sql_db.Error, e:
         print '[DATABASE ERROR] Could not log in player with ID %s: %s' % (player_id, e.args[0])
     except:
         pass
     return False
 
-def update_player(db_con, player_name, player_id):
+
+def update_player(db_con, player_id, player_name):
     if not player_id:
         return False
     if not password:
@@ -188,19 +187,38 @@ def update_player(db_con, player_name, player_id):
         if not db_con:
             db_con = get_connection()
         db_cur = db_con.cursor()
-        db_cur.execute("UPDATE players SET ingame_name='?', online_seconds=online_seconds+(?-last_online), last_online=?, WHERE id=?", [player_name, reactor.seconds(), reactor.seconds(), player_id])
+        db_cur.execute("UPDATE players SET ingame_name='?', online_seconds=online_seconds+(?-last_online), last_online=?, WHERE id=?", [player_name.lower(), reactor.seconds(), reactor.seconds(), player_id])
     except sql_db.Error, e:
         print '[DATABASE ERROR] Could not update player info for id %s: %s' % (player_id, e.args[0])
     except:
         pass
     return False
 
+
+def set_player_rank(db_con, player_id, player_rank):
+    if not player_name:
+        return False
+    if not player_rank:
+        return False
+    try:
+        if not db_con:
+            db_con = get_connection()
+        db_cur = db_con.cursor()
+        db_cur.execute("UPDATE players SET rank='?' WHERE id=?", [player_rank.lower(), player_id])
+        db_con.commit()
+        if db_cur.rowcount == 1:
+            return True
+    except:
+        pass
+    return False
+
+
 def ban_id(db_con, player_id, banned_by=None, banned_until=None, ban_reason=None):
     try:
         if not db_con:
             db_con = get_connection()
         db_cur = db_con.cursor()
-        db_cur.execute("INSERT OR REPLACE INTO player_bans (player_id, ip_address, banned_by, banned_since, banned_until, reason) VALUES (?, (SELECT ip_address FROM players WHERE id=?), '?', ?, ?, '?')", [player_id, player_id, banned_by, reactor.seconds(), banned_until, ban_reason])
+        db_cur.execute("INSERT OR REPLACE INTO player_bans (player_id, ip_address, banned_by, banned_since, banned_until, reason) VALUES (?, (SELECT ip_address FROM players WHERE id=?), '?', ?, ?, '?')", [player_id, player_id, banned_by.lower(), reactor.seconds(), banned_until, ban_reason])
         db_cur.commit()
         return True
     except sql_db.Error, e:
@@ -216,7 +234,7 @@ def ban_ip(db_con, ip_address, banned_by=None, banned_until=None, ban_reason=Non
         if not db_con:
             db_con = get_connection()
         db_cur = db_con.cursor()
-        db_cur.execute("INSERT OR REPLACE INTO player_bans (player_id, ip_address, banned_by, banned_since, banned_until, reason) VALUES ((SELECT id FROM players WHERE last_ip='?'), '?', ?, NULL, '?')", [ip_address, ip_address, banned_by, reactor.seconds(), banned_until, ban_reason])
+        db_cur.execute("INSERT OR REPLACE INTO player_bans (player_id, ip_address, banned_by, banned_since, banned_until, reason) VALUES ((SELECT id FROM players WHERE last_ip='?'), '?', ?, NULL, '?')", [ip_address, ip_address, banned_by.lower(), reactor.seconds(), banned_until, ban_reason])
         db_cur.commit()
         return True
     except sql_db.Error, e:

@@ -77,11 +77,11 @@ time_modifier = 1.0
 # Consider turning on 'pvp', i.e. player versus player
 scripts = ['master', 'log', 'commands', 'welcome', 'ban', 'console']
 
-# Passwords used for rights management. Keys are passwords, and values are
-# a list of user types under that password. Right now, only 'admin' is defined,
-# but scripts can restrict their usage depending on the user type
-passwords = {
-    'PASSWORDREPLACEME': ['admin']
+# Ranks have rank numbers that are used
+# to give them a higher or lower order
+ranks = {
+    'default': 1,
+    'admin': 99
 }
 
 name_filter = "^[a-zA-Z0-9_!@#$%\^&*()\[\]|:;'.,/\-+ <>\\\"{}~`=?]{2,16}$"
@@ -91,17 +91,17 @@ name_filter = "^[a-zA-Z0-9_!@#$%\^&*()\[\]|:;'.,/\-+ <>\\\"{}~`=?]{2,16}$"
 welcome = ["Welcome to %(server_name)s!",
            "Provided by cuwo - an Open-Source Cube World Server-Implementation licensed under GNU GPL 3.",
            "cuwo currently is in an early development state so not everything can work as expected yet.",
-           "Player Commands: /help, /list, /spawn, /tell <player> <message>, /whois <player>, /whereis <player>",
+           "Player Commands: /help, /list, /login <ID> <Password>, /register <Password> <Password Repeating>, /spawn, /tell <Name> <Message>, /whois <Name>",
            "This message and many other things can be changed as you want in the config.py file."]
 
 # Command help provided to players
-help_players = ["=== PLAYER COMMANDS HELP ===",
-                "/register <password> - use this to get an unique id when joining the first time",
-                "/login <id> <password> - login after joining using your numeric id you got on registering and the right password",
-                "/spawn - teleports you to the spawn point",
-                "/list - shows you who currently is online and also their classes/levels",
-                "/whereis <player> - tells you who is where (coordinates)",
-                "/tell <player> <message> - allows you to send a private message to the given player"]
+help = ["=== PLAYER COMMANDS HELP ===",
+        "/register <password> <password repeating> - use this to get an unique id when joining the first time",
+        "/login <id> <password> - login after joining using your numeric id you got on registering and the right password",
+        "/spawn - teleports you to the spawn point",
+        "/list - shows you who currently is online and also their classes/levels",
+        "/whereis <player> - tells you who is where (coordinates)",
+        "/tell <player> <message> - allows you to send a private message to the given player"]
 
 # Web interface variables (enable by adding 'web' to script list)
 web_port = 8081

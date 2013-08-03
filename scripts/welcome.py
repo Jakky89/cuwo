@@ -10,8 +10,7 @@ class WelcomeServer(ServerScript):
     connection_class = None
 
     def on_load(self):
-        config = self.server.config.base
-        self.welcome = self.server.format_lines(config.welcome)
+        self.welcome = self.server.format_lines(self.server.config.base.welcome)
 
     def on_new_connection(self, event):
         reactor.callLater(10, event.connection.send_lines, self.welcome)
