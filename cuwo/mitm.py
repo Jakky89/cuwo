@@ -25,9 +25,6 @@ from cuwo.packet import (PacketHandler, write_packet, ServerChatMessage,
                          create_entity_data, JoinPacket, CurrentTime)
 from cuwo import constants
 
-from inspect import getmembers
-import pprint
-
 
 class RelayClient(Protocol):
     def __init__(self, protocol):
@@ -60,8 +57,19 @@ class CubeWorldProtocol(Protocol):
                                             self.on_server_packet)
         self.entities = {}
         self.relay_packets = []
-        self.last_packet_id_client = 0
-        self.last_packet_id_server = 0
+        self.print_stats()
+        self.times = []
+
+    def print_stats(self):
+        if self.disconnected:
+            return
+        reactor.callLater(15, self.print_stats)
+
+        if self.entity_id is None:
+            return
+        entity = self.entities[self.entity_id]
+        print 'Info:'
+        print 'Pos:', entity.pos.x, entity.pos.y, entity.pos.z
 
     def send_chat(self, value):
         packet = ServerChatMessage()
@@ -70,48 +78,34 @@ class CubeWorldProtocol(Protocol):
         self.transport.write(write_packet(packet))
 
     def on_entity_update(self, packet):
-        if packet.entity_id == self.entity_id:
-            return
-        entity = self.entities.get(packet.entity_id, create_entity_data())
-        mask = packet.update_entity(entity)
-        if mask != entity.mask:
-            entity.mask = mask
-            print 'ENTITY MASK %s' % mask
-            pprint.pprint(getmembers(entity))
+        if packet.entity_id not in self.entities:
+            entity = create_entity_data()
+            self.entities[packet.entity_id] = entity
+        else:
+            entity = self.entities[packet.entity_id]
+        packet.update_entity(entity)
 
     def on_client_packet(self, packet):
-        if packet.packet_id not in (10, 11, 12, 17):
-            if packet.packet_id != self.last_packet_id_client:
-                self.last_packet_id_client = packet.packet_id
-                print '>>> CLIENT PACKET %s' % packet.packet_id
-                pprint.pprint(getmembers(packet))
-        if packet.packet_id == 6:
-            print '>>> INTERACT PACKET'
-            pprint.pprint(getmembers(packet))
-        elif packet.packet_id == 7:
-            print '>>> HIT PACKET'
-        #if packet.packet_id == 0:
-        #    self.on_entity_update(packet)
+        if packet.packet_id == EntityUpdate.packet_id:
+            self.on_entity_update(packet)
         if self.relay_client is None:
             self.relay_packets.append(write_packet(packet))
             return
         self.relay_client.transport.write(write_packet(packet))
+        if packet.packet_id not in (0,):
+            print 'Got client packet:', packet.packet_id
 
     def on_server_packet(self, packet):
-        if packet.packet_id == JoinPacket.packet_id:
+        if packet.packet_id == EntityUpdate.packet_id:
+            self.on_entity_update(packet)
+        elif packet.packet_id == JoinPacket.packet_id:
             self.entity_id = packet.entity_id
-        if packet.packet_id not in (2, 4, 5, 11, 12):
-            if packet.packet_id != self.last_packet_id_server:
-                self.last_packet_id_server = packet.packet_id
-                if packet.packet_id == 0:
-                    self.on_entity_update(packet)
-                print '<<< SERVER PACKET %s' % packet.packet_id
-                pprint.pprint(getmembers(packet))
-        if packet.packet_id == CurrentTime.packet_id:
+        elif packet.packet_id == CurrentTime.packet_id:
             # I hate darkness
             packet.time = constants.MAX_TIME / 2
         self.transport.write(write_packet(packet))
-
+        if packet.packet_id not in (0, 2, 4, 5):
+            print 'Got server packet:', packet.packet_id
 
     def got_relay_client(self, p):
         self.relay_client = p

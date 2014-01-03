@@ -1,0 +1,2883 @@
+2014-01-03 03:17:28+0100 [-] cuwo server started on Fri Jan  3 03:17:28 2014
+2014-01-03 03:17:28+0100 [-] Log opened.
+2014-01-03 03:17:28+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 03:17:28+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 03:17:28+0100 [-] Traceback (most recent call last):
+2014-01-03 03:17:28+0100 [-]   File "/usr/lib/python2.7/runpy.py", line 162, in _run_module_as_main
+2014-01-03 03:17:28+0100 [-]     "__main__", fname, loader, pkg_name)
+2014-01-03 03:17:28+0100 [-]   File "/usr/lib/python2.7/runpy.py", line 72, in _run_code
+2014-01-03 03:17:28+0100 [-]     exec code in run_globals
+2014-01-03 03:17:28+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 950, in <module>
+2014-01-03 03:17:28+0100 [-]     main()
+2014-01-03 03:17:28+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 935, in main
+2014-01-03 03:17:28+0100 [-]     server = CubeWorldServer(config)
+2014-01-03 03:17:28+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 668, in __init__
+2014-01-03 03:17:28+0100 [-]     self.load_script(script)
+2014-01-03 03:17:28+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 839, in load_script
+2014-01-03 03:17:28+0100 [-]     mod = __import__('scripts.%s' % name, globals(), locals(), [name])
+2014-01-03 03:17:28+0100 [-]   File "scripts/commands.py", line 44, in <module>
+2014-01-03 03:17:28+0100 [-]     @admin
+2014-01-03 03:17:28+0100 [-]   File "cuwo/script.py", line 119, in command
+2014-01-03 03:17:28+0100 [-]     klass = sys.modules[command.module].get_class()
+2014-01-03 03:17:28+0100 [-] AttributeError: 'module' object has no attribute 'get_class'
+2014-01-03 03:23:15+0100 [-] cuwo server started on Fri Jan  3 03:23:15 2014
+2014-01-03 03:23:15+0100 [-] Log opened.
+2014-01-03 03:23:15+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 03:23:15+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 03:23:15+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 03:23:15+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 03:23:15+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 03:23:16+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 03:23:16+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 03:23:16+0100 [-] Traceback (most recent call last):
+2014-01-03 03:23:16+0100 [-]   File "/usr/lib/python2.7/runpy.py", line 162, in _run_module_as_main
+2014-01-03 03:23:16+0100 [-]     "__main__", fname, loader, pkg_name)
+2014-01-03 03:23:16+0100 [-]   File "/usr/lib/python2.7/runpy.py", line 72, in _run_code
+2014-01-03 03:23:16+0100 [-]     exec code in run_globals
+2014-01-03 03:23:16+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 950, in <module>
+2014-01-03 03:23:16+0100 [-]     main()
+2014-01-03 03:23:16+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 935, in main
+2014-01-03 03:23:16+0100 [-]     server = CubeWorldServer(config)
+2014-01-03 03:23:16+0100 [-]   File "/home/cubeworld/server/cuwo/server.py", line 676, in __init__
+2014-01-03 03:23:16+0100 [-]     if has_world and base.use_world:
+2014-01-03 03:23:16+0100 [-] NameError: global name 'has_world' is not defined
+2014-01-03 03:23:45+0100 [-] cuwo server started on Fri Jan  3 03:23:45 2014
+2014-01-03 03:23:45+0100 [-] Log opened.
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 03:23:45+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 03:23:45+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 03:23:45+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x29a15f0>
+2014-01-03 03:23:45+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 03:23:45+0100 [-] MasterClient starting on 12345
+2014-01-03 03:23:45+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x2a52fc8>
+2014-01-03 03:23:55+0100 [-] Unhandled error in Deferred:
+2014-01-03 03:23:55+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 03:24:10+0100 [-] Received SIGINT, shutting down.
+2014-01-03 03:24:10+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 03:24:10+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x2a52fc8>
+2014-01-03 03:24:10+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 03:24:10+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x29a15f0>
+2014-01-03 03:24:10+0100 [-] Main loop terminated.
+2014-01-03 03:24:10+0100 [-] Database connection closed.
+2014-01-03 03:28:17+0100 [-] cuwo server started on Fri Jan  3 03:28:17 2014
+2014-01-03 03:28:17+0100 [-] Log opened.
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 03:28:17+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 03:28:17+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 03:28:17+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x27ea5f0>
+2014-01-03 03:28:17+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 03:28:17+0100 [-] MasterClient starting on 12345
+2014-01-03 03:28:17+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x289bf80>
+2014-01-03 03:28:27+0100 [-] Unhandled error in Deferred:
+2014-01-03 03:28:27+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 03:28:35+0100 [-] Received SIGINT, shutting down.
+2014-01-03 03:28:35+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 03:28:35+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x289bf80>
+2014-01-03 03:28:35+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 03:28:35+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x27ea5f0>
+2014-01-03 03:28:35+0100 [-] Main loop terminated.
+2014-01-03 03:28:35+0100 [-] Database connection closed.
+2014-01-03 03:29:36+0100 [-] cuwo server started on Fri Jan  3 03:29:36 2014
+2014-01-03 03:29:36+0100 [-] Log opened.
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 03:29:36+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 03:29:36+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 03:29:36+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x241d5f0>
+2014-01-03 03:29:36+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 03:29:36+0100 [-] MasterClient starting on 12345
+2014-01-03 03:29:36+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x24cefc8>
+2014-01-03 03:29:46+0100 [-] Unhandled error in Deferred:
+2014-01-03 03:29:46+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 03:29:56+0100 [-] Received SIGINT, shutting down.
+2014-01-03 03:29:56+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 03:29:56+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x241d5f0>
+2014-01-03 03:29:56+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 03:29:56+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x24cefc8>
+2014-01-03 03:29:56+0100 [-] Main loop terminated.
+2014-01-03 03:29:56+0100 [-] Database connection closed.
+2014-01-03 21:16:34+0100 [-] cuwo server started on Fri Jan  3 21:16:34 2014
+2014-01-03 21:16:34+0100 [-] Log opened.
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 21:16:34+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 21:16:34+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 21:16:34+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x1fb65f0>
+2014-01-03 21:16:34+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 21:16:34+0100 [-] MasterClient starting on 12345
+2014-01-03 21:16:34+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x2068fc8>
+2014-01-03 21:16:44+0100 [-] Unhandled error in Deferred:
+2014-01-03 21:16:44+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 21:17:01+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 21:17:01+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 195, in on_entity_packet
+	    self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+	  File "/home/cubeworld/server/cuwo/server.py", line 613, in position
+	    return Vector3(self.entity_data.x,
+	exceptions.AttributeError: 'EntityData' object has no attribute 'x'
+	
+2014-01-03 21:19:37+0100 [-] Received SIGINT, shutting down.
+2014-01-03 21:19:37+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 21:19:37+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x1fb65f0>
+2014-01-03 21:19:37+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 21:19:37+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x2068fc8>
+2014-01-03 21:19:37+0100 [-] Main loop terminated.
+2014-01-03 21:19:37+0100 [-] Database connection closed.
+2014-01-03 21:22:48+0100 [-] cuwo server started on Fri Jan  3 21:22:48 2014
+2014-01-03 21:22:48+0100 [-] Log opened.
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 21:22:48+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 21:22:48+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 21:22:48+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x2fd0098>
+2014-01-03 21:22:48+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 21:22:48+0100 [-] MasterClient starting on 12345
+2014-01-03 21:22:48+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x2fd0170>
+2014-01-03 21:22:58+0100 [-] Unhandled error in Deferred:
+2014-01-03 21:22:58+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 21:23:08+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 21:23:09+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 195, in on_entity_packet
+	    self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+	  File "/home/cubeworld/server/cuwo/server.py", line 612, in position
+	    return Vector3(self.entity_data.x,
+	exceptions.AttributeError: 'EntityData' object has no attribute 'x'
+	
+2014-01-03 21:23:24+0100 [-] Received SIGINT, shutting down.
+2014-01-03 21:23:25+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 21:23:25+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x2fd0098>
+2014-01-03 21:23:25+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 21:23:25+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x2fd0170>
+2014-01-03 21:23:25+0100 [-] Main loop terminated.
+2014-01-03 21:23:25+0100 [-] Database connection closed.
+2014-01-03 21:23:45+0100 [-] cuwo server started on Fri Jan  3 21:23:45 2014
+2014-01-03 21:23:45+0100 [-] Log opened.
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 21:23:45+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 21:23:45+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 21:23:45+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x1b9e5f0>
+2014-01-03 21:23:45+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 21:23:45+0100 [-] MasterClient starting on 12345
+2014-01-03 21:23:45+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x1c4ef80>
+2014-01-03 21:23:55+0100 [-] Unhandled error in Deferred:
+2014-01-03 21:23:55+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 21:24:06+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 21:24:07+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 195, in on_entity_packet
+	    self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+	  File "/home/cubeworld/server/cuwo/server.py", line 612, in position
+	    return Vector3(self.entity_data.pos.x,
+	exceptions.AttributeError: 'EntityData' object has no attribute 'pos'
+	
+2014-01-03 21:28:58+0100 [-] Received SIGINT, shutting down.
+2014-01-03 21:28:58+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 21:28:58+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x1b9e5f0>
+2014-01-03 21:28:58+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 21:28:58+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x1c4ef80>
+2014-01-03 21:28:58+0100 [-] Main loop terminated.
+2014-01-03 21:28:58+0100 [-] Database connection closed.
+2014-01-03 21:29:06+0100 [-] cuwo server started on Fri Jan  3 21:29:06 2014
+2014-01-03 21:29:06+0100 [-] Log opened.
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 21:29:06+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 21:29:06+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 21:29:06+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x26cc5f0>
+2014-01-03 21:29:06+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 21:29:06+0100 [-] MasterClient starting on 12345
+2014-01-03 21:29:06+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x277dfc8>
+2014-01-03 21:29:16+0100 [-] Unhandled error in Deferred:
+2014-01-03 21:29:16+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 21:29:27+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 21:29:27+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 195, in on_entity_packet
+	    self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+	  File "/home/cubeworld/server/cuwo/server.py", line 612, in position
+	    return Vector3(self.entity_data.pos.x,
+	exceptions.AttributeError: 'EntityData' object has no attribute 'pos'
+	
+2014-01-03 21:29:42+0100 [-] Received SIGINT, shutting down.
+2014-01-03 21:29:42+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 21:29:42+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x26cc5f0>
+2014-01-03 21:29:42+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 21:29:42+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x277dfc8>
+2014-01-03 21:29:42+0100 [-] Main loop terminated.
+2014-01-03 21:29:42+0100 [-] Database connection closed.
+2014-01-03 21:33:20+0100 [-] cuwo server started on Fri Jan  3 21:33:20 2014
+2014-01-03 21:33:20+0100 [-] Log opened.
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 21:33:20+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 21:33:20+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 21:33:20+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x143e5f0>
+2014-01-03 21:33:20+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 21:33:20+0100 [-] MasterClient starting on 12345
+2014-01-03 21:33:20+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x14f0fc8>
+2014-01-03 21:33:30+0100 [-] Unhandled error in Deferred:
+2014-01-03 21:33:30+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 21:33:38+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 21:33:40+0100 [CubeWorldConnection,0,93.200.65.91] Log observer <bound method FileLogObserver.emit of <twisted.python.log.FileLogObserver instance at 0x1451560>> failed.
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 597, in _doReadOrWrite
+	    log.err()
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 213, in err
+	    msg(failure=_stuff, why=_why, isError=1, **kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 284, in msg
+	    self.observers[i](actualEventDict)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 480, in emit
+	    util.untilConcludes(self.write, timeStr + " " + msgStr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/util.py", line 784, in untilConcludes
+	    return f(*a, **kw)
+	exceptions.IOError: [Errno 11] Resource temporarily unavailable
+	
+2014-01-03 21:33:39+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 195, in on_entity_packet
+	    self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    if not self.position:
+	exceptions.RuntimeError: maximum recursion depth exceeded while calling a Python object
+	
+2014-01-03 21:33:51+0100 [-] Received SIGINT, shutting down.
+2014-01-03 21:33:51+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 21:33:51+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x143e5f0>
+2014-01-03 21:33:51+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 21:33:51+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x14f0fc8>
+2014-01-03 21:33:51+0100 [-] Main loop terminated.
+2014-01-03 21:33:51+0100 [-] Database connection closed.
+2014-01-03 21:34:19+0100 [-] cuwo server started on Fri Jan  3 21:34:19 2014
+2014-01-03 21:34:19+0100 [-] Log opened.
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 21:34:19+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 21:34:19+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 21:34:19+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x1786638>
+2014-01-03 21:34:19+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 21:34:19+0100 [-] MasterClient starting on 12345
+2014-01-03 21:34:19+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x1786710>
+2014-01-03 21:34:29+0100 [-] Unhandled error in Deferred:
+2014-01-03 21:34:29+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 21:34:43+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 21:34:43+0100 [CubeWorldConnection,0,93.200.65.91] Log observer <bound method FileLogObserver.emit of <twisted.python.log.FileLogObserver instance at 0x17995a8>> failed.
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 597, in _doReadOrWrite
+	    log.err()
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 213, in err
+	    msg(failure=_stuff, why=_why, isError=1, **kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 284, in msg
+	    self.observers[i](actualEventDict)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 480, in emit
+	    util.untilConcludes(self.write, timeStr + " " + msgStr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/util.py", line 784, in untilConcludes
+	    return f(*a, **kw)
+	exceptions.IOError: [Errno 11] Resource temporarily unavailable
+	
+2014-01-03 21:34:43+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 195, in on_entity_packet
+	    self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	  File "/home/cubeworld/server/cuwo/server.py", line 611, in position
+	    return Vector3(self.position.x,
+	exceptions.RuntimeError: maximum recursion depth exceeded while calling a Python object
+	
+2014-01-03 21:34:50+0100 [-] Received SIGINT, shutting down.
+2014-01-03 21:34:50+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 21:34:50+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x1786638>
+2014-01-03 21:34:50+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 21:34:50+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x1786710>
+2014-01-03 21:34:50+0100 [-] Main loop terminated.
+2014-01-03 21:34:50+0100 [-] Database connection closed.
+2014-01-03 23:28:24+0100 [-] cuwo server started on Fri Jan  3 23:28:24 2014
+2014-01-03 23:28:24+0100 [-] Log opened.
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 23:28:24+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 23:28:24+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 23:28:24+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x211d5f0>
+2014-01-03 23:28:24+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 23:28:24+0100 [-] MasterClient starting on 12345
+2014-01-03 23:28:24+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x21ccf80>
+2014-01-03 23:28:34+0100 [-] Unhandled error in Deferred:
+2014-01-03 23:28:34+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 23:28:47+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 23:28:47+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 198, in on_entity_packet
+	    self.on_join()
+	  File "/home/cubeworld/server/cuwo/server.py", line 356, in on_join
+	    res = self.scripts.call('on_join').result
+	  File "cuwo/script.py", line 113, in call
+	    ret = handler(event)
+	  File "scripts/anticheat/__init__.py", line 114, in on_join
+	    if self.on_equipment_update() is False:
+	  File "scripts/anticheat/__init__.py", line 167, in on_equipment_update
+	    self.update_max_health()
+	  File "scripts/anticheat/__init__.py", line 141, in update_max_health
+	    self.max_health = get_entity_max_health(entity_data)
+	  File "cuwo/common.py", line 207, in get_entity_max_health
+	    health = get_entity_base_health(entity)
+	  File "cuwo/common.py", line 122, in get_entity_base_health
+	    if entity.hostile_type == 0:
+	exceptions.AttributeError: 'EntityData' object has no attribute 'hostile_type'
+	
+2014-01-03 23:29:03+0100 [-] Received SIGINT, shutting down.
+2014-01-03 23:29:03+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 23:29:03+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x211d5f0>
+2014-01-03 23:29:03+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 23:29:03+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x21ccf80>
+2014-01-03 23:29:03+0100 [-] Main loop terminated.
+2014-01-03 23:29:03+0100 [-] Database connection closed.
+2014-01-03 23:35:29+0100 [-] cuwo server started on Fri Jan  3 23:35:29 2014
+2014-01-03 23:35:29+0100 [-] Log opened.
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 23:35:29+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 23:35:29+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 23:35:29+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x16025f0>
+2014-01-03 23:35:29+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 23:35:29+0100 [-] MasterClient starting on 12345
+2014-01-03 23:35:29+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x168ff80>
+2014-01-03 23:35:39+0100 [-] Unhandled error in Deferred:
+2014-01-03 23:35:39+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 23:35:57+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 23:35:57+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 198, in on_entity_packet
+	    self.on_join()
+	  File "/home/cubeworld/server/cuwo/server.py", line 376, in on_join
+	    get_entity_type_level_str(self.entity_data),
+	  File "cuwo/common.py", line 218, in get_entity_type_level_str
+	    return '%s L%s' % (get_player_class_str(entity_data.class_type), entity_data.level)
+	exceptions.NameError: global name 'get_player_class_str' is not defined
+	
+2014-01-03 23:41:24+0100 [-] Received SIGINT, shutting down.
+2014-01-03 23:41:24+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 23:41:24+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x16025f0>
+2014-01-03 23:41:24+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 23:41:24+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x168ff80>
+2014-01-03 23:41:24+0100 [-] Main loop terminated.
+2014-01-03 23:41:24+0100 [-] Database connection closed.
+2014-01-03 23:41:25+0100 [-] cuwo server started on Fri Jan  3 23:41:25 2014
+2014-01-03 23:41:25+0100 [-] Log opened.
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 23:41:25+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 23:41:25+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 23:41:25+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x16a6638>
+2014-01-03 23:41:25+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 23:41:25+0100 [-] MasterClient starting on 12345
+2014-01-03 23:41:25+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x16a6710>
+2014-01-03 23:41:35+0100 [-] Unhandled error in Deferred:
+2014-01-03 23:41:35+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 23:41:48+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 23:41:48+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 198, in on_entity_packet
+	    self.on_join()
+	  File "/home/cubeworld/server/cuwo/server.py", line 376, in on_join
+	    get_entity_type_level_str(self.entity_data),
+	  File "cuwo/common.py", line 218, in get_entity_type_level_str
+	    return '%s L%s %s' % (CLASS_NAMES[entity_data.class_type], entity_data.level, CLASS_SPECIALIZATIONS[entity_data.class_type][entity_data.specialization])
+	exceptions.NameError: global name 'CLASS_NAMES' is not defined
+	
+2014-01-03 23:41:53+0100 [-] Received SIGINT, shutting down.
+2014-01-03 23:41:53+0100 [__main__.CubeWorldServer] (TCP Port 12345 Closed)
+2014-01-03 23:41:53+0100 [__main__.CubeWorldServer] Stopping factory <__main__.CubeWorldServer instance at 0x16a6638>
+2014-01-03 23:41:53+0100 [MasterClient (UDP)] (UDP Port 12345 Closed)
+2014-01-03 23:41:53+0100 [MasterClient (UDP)] Stopping protocol <scripts.master.MasterClient instance at 0x16a6710>
+2014-01-03 23:41:53+0100 [-] Main loop terminated.
+2014-01-03 23:41:53+0100 [-] Database connection closed.
+2014-01-03 23:43:37+0100 [-] cuwo server started on Fri Jan  3 23:43:37 2014
+2014-01-03 23:43:37+0100 [-] Log opened.
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'log'
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'ddos'
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'commands'
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'welcome'
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'ban'
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'console'
+2014-01-03 23:43:37+0100 [-] [INFO] Loaded script 'anticheat'
+2014-01-03 23:43:37+0100 [-] CubeWorldServer starting on 12345
+2014-01-03 23:43:37+0100 [-] Starting factory <__main__.CubeWorldServer instance at 0x2732638>
+2014-01-03 23:43:37+0100 [-] [INFO] Server is listening on port 12345
+2014-01-03 23:43:37+0100 [-] MasterClient starting on 12345
+2014-01-03 23:43:37+0100 [-] Starting protocol <scripts.master.MasterClient instance at 0x2732710>
+2014-01-03 23:43:47+0100 [-] Unhandled error in Deferred:
+2014-01-03 23:43:47+0100 [-] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1169, in run
+	    self.mainLoop()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 1178, in mainLoop
+	    self.runUntilCurrent()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/base.py", line 800, in runUntilCurrent
+	    call.func(*call.args, **call.kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/task.py", line 215, in __call__
+	    d = defer.maybeDeferred(self.f, *self.a, **self.kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/defer.py", line 134, in maybeDeferred
+	    result = f(*args, **kw)
+	  File "scripts/master.py", line 105, in update
+	    self.send_packet(data.get(), self.address)
+	  File "scripts/master.py", line 50, in send_packet
+	    self.transport.write(data, addr)
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/udp.py", line 184, in write
+	    return self.socket.sendto(datagram, addr)
+	socket.error: [Errno 1] Operation not permitted
+	
+2014-01-03 23:43:56+0100 [__main__.CubeWorldServer] [DATABASE] Connected to database using SQLite 3.7.13
+2014-01-03 23:43:56+0100 [CubeWorldConnection,0,93.200.65.91] >>> Player Jakky89 Ranger L1 Sniper #1 [93.200.65.91] joined the game
+2014-01-03 23:43:58+0100 [CubeWorldConnection,0,93.200.65.91] Unhandled Error
+	Traceback (most recent call last):
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 84, in callWithLogger
+	    return callWithContext({"system": lp}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/log.py", line 69, in callWithContext
+	    return context.call({ILogContext: newCtx}, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 118, in callWithContext
+	    return self.currentContext().callWithContext(ctx, func, *args, **kw)
+	  File "/usr/lib/python2.7/dist-packages/twisted/python/context.py", line 81, in callWithContext
+	    return func(*args,**kw)
+	--- <exception caught here> ---
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/posixbase.py", line 586, in _doReadOrWrite
+	    why = selectable.doRead()
+	  File "/usr/lib/python2.7/dist-packages/twisted/internet/tcp.py", line 199, in doRead
+	    rval = self.protocol.dataReceived(data)
+	  File "/home/cubeworld/server/cuwo/server.py", line 139, in dataReceived
+	    self.packet_handler.feed(data)
+	  File "cuwo/packet.py", line 721, in feed
+	    self.callback(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 176, in on_packet
+	    handler(packet)
+	  File "/home/cubeworld/server/cuwo/server.py", line 204, in on_entity_packet
+	    self.on_pos_update()
+	  File "/home/cubeworld/server/cuwo/server.py", line 235, in on_pos_update
+	    self.server.world.get_chunk(*chunk).addCallback(self.on_chunk)
+	exceptions.AttributeError: 'World' object has no attribute 'get_chunk'
+	
+2014-01-03 23:43:58+0100 [CubeWorldConnection,0,93.200.65.91] [INFO] Player Jakky89 #1 left the game.

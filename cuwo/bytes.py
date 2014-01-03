@@ -1,4 +1,4 @@
-# Copyright (c) Mathias Kaerlev, Somer Hayter, sarcengm and Jakky89 2013.
+# Copyright (c) Mathias Kaerlev 2013.
 #
 # This file is part of cuwo.
 #
@@ -24,7 +24,6 @@ from cuwo.exceptions import OutOfData
 from cuwo.common import filter_string
 import struct
 from cStringIO import StringIO
-
 
 INT8 = struct.Struct('<b')
 UINT8 = struct.Struct('<B')
@@ -218,3 +217,4 @@ class ByteReader(object):
         y = self.read_int64()
         z = self.read_int64()
         return Vector3(x, y, z)
+

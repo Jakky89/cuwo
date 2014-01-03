@@ -28,15 +28,19 @@
 
 # Version of clients that should be able to join
 CLIENT_VERSION = 3
+SERVER_PORT = 12345
+FULL_MASK = 0x0000FFFFFFFFFFFF
+
 
 # Name of the SQLite database file to use
 DATABASE_NAME = 'cuwo.db'
+
 
 # Time constants
 MAX_TIME = 86400000.0
 NORMAL_TIME_SPEED = 10.0
 SLEEP_TIME_SPEED = 100.0
-# 25 is enough and more could result in more traffic and/or cpu load
+# 25 is more than enough and more could result in more traffic and/or cpu load
 UPDATE_FPS = 25
 
 
@@ -49,12 +53,21 @@ ANTISPAM_LIMIT_CHAT = 1
 # Burst means how many messages are acceptable within the limit
 ANTISPAM_BURST_CHAT = 3
 
+MAX_ITEMS_PER_CHUNK = 1000
+
 
 # Scale constants
-BLOCK_SCALE = 0xFFFF
-CHUNK_SCALE = 0xFFFFFF
-SECTOR_SCALE = 0x3FFFFFFF
-MAX_POS = 0xFFFFFFFFFF
+BLOCK_SCALE = 0x10000
+CHUNK_SCALE = BLOCK_SCALE * 256
+SECTOR_SCALE = CHUNK_SCALE * 64
+MAX_POS = SECTOR_SCALE * 1024
+
+
+# block constants
+AIR_BLOCK = 0
+SOLID_BLOCK = 1
+WATER_BLOCK = 2
+FLAT_WATER_BLOCK = 3
 
 
 # Entity types valid for players
@@ -81,11 +94,49 @@ MAX_DISTANCE = 100
 # Maximum move distance per second
 MAX_MOVE_DISTANCE = 100
 
+
 # Entity classes
-CLASS_WARRIOR = 1
-CLASS_RANGER = 2
-CLASS_MAGE = 3
-CLASS_ROGUE = 4
+WARRIOR_CLASS = 1
+BERSERKER = 0
+GUARDIAN = 1
+
+RANGER_CLASS = 2
+SNIPER = 0
+SCOUT = 1
+
+MAGE_CLASS = 3
+FIRE_MAGE = 0
+WATER_MAGE = 1
+
+ROGUE_CLASS = 4
+ASSASSIN = 0
+NINJA = 1
+
+CLASS_NAMES = {
+    WARRIOR_CLASS: 'Warrior',
+    RANGER_CLASS: 'Ranger',
+    MAGE_CLASS: 'Mage',
+    ROGUE_CLASS: 'Rogue'
+}
+
+CLASS_SPECIALIZATIONS = {
+    WARRIOR_CLASS: {
+        BERSERKER: 'Berserker',
+        GUARDIAN: 'Guardian'
+    },
+    RANGER_CLASS: {
+        SNIPER: 'Sniper',
+        SCOUT: 'Scout'
+    },
+    MAGE_CLASS: {
+        FIRE_MAGE: 'Fire',
+        WATER_MAGE: 'Water'
+    },
+    ROGUE_CLASS: {
+        ASSASSIN: 'Assassin',
+        NINJA: 'Ninja'
+    }
+}
 
 # Hit types
 HIT_NORMAL = 0
@@ -99,15 +150,6 @@ INTERACT_NORMAL = 3
 INTERACT_PICKUP = 5
 INTERACT_DROP = 6
 INTERACT_EXAMINE = 8 # also DOORS etc. I think
-
-# Human readable class names ordered by class id
-PLAYER_CLASSES = [
-    'Unknown',
-    'Warrior',
-    'Ranger',
-    'Mage',
-    'Rogue'
-]
 
 
 # Human readable race names ordered by race id
@@ -125,7 +167,6 @@ PLAYER_RACES = [
 
 # Commands help provided to players
 PLAYER_COMMANDS_HELP = 'Player Commands: /register <password>, /login <id> <password>, /spawn, /list, /tell <player> <message>'
-
 
 ITEM_NAMES = {
     0: 'Crash',
@@ -153,7 +194,6 @@ ITEM_NAMES = {
     24: 'Lamp'
 }
 
-
 CONSUMABLE_NAMES = {
     0: 'Cookie',
     1: 'Life Potion',
@@ -165,9 +205,8 @@ CONSUMABLE_NAMES = {
     7: 'Bomb',
     8: 'Pineapple Slice',
     9: 'Pumpkin Muffin',
-    10: 'Mushroom'
+    10: 'Mushroom?'
 }
-
 
 WEAPON_NAMES = {
     0: 'Sword',
@@ -192,7 +231,6 @@ WEAPON_NAMES = {
     19: 'Pickaxe',
     20: 'Torch'
 }
-
 
 MATERIAL_NAMES = {
     1: 'Iron',
@@ -221,7 +259,6 @@ MATERIAL_NAMES = {
     130: 'Ice',
     131: 'Wind'
 }
-
 
 NPC_NAMES = {
     0: 'Elf (Male)',
@@ -353,7 +390,7 @@ NPC_NAMES = {
     126: 'Scrub (Fire)',
     127: 'Ginseng',
     128: 'Cactus',
-    129: 'Christmas Tree?',
+    129: 'Christmas Tree',
     130: 'Thorntree',
     131: 'Deposit (Gold)',
     132: 'Deposit (Iron)',

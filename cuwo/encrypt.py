@@ -59,7 +59,7 @@ def pack(dbfile, dir):
 
 
 def main():
-    extract('data2.db', 'out2')
+    extract('map_online_626466.db', 'out2')
 
 if __name__ == '__main__':
     main()

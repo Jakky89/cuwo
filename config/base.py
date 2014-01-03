@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 # Global server name
-server_name = 'a Server powered by cuwo'
+server_name = 'A Cube World Server'
 
 # Network interface to bind to. Leave empty for all IPv4 interfaces.
 network_interface = ''
@@ -64,7 +64,7 @@ cheat_prevention = True
 protection_dos = True
 max_connections_per_ip = 5
 
-connection_timeout = 5.0
+connection_timeout = 10.0
 
 # Enable/Disable auto kick on some things
 auto_kick_spam = True
@@ -75,7 +75,7 @@ time_modifier = 1.0
 
 # List of scripts to run on the server on startup.
 # Consider turning on 'pvp', i.e. player versus player
-scripts = ['master', 'log', 'commands', 'welcome', 'ban', 'console']
+scripts = ['master', 'log', 'ddos', 'commands', 'welcome', 'ban', 'console', 'anticheat']
 
 # Ranks have rank numbers that are used
 # to give them a higher or lower order

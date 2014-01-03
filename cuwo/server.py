@@ -26,13 +26,14 @@ from cuwo.packet import (PacketHandler, write_packet, CS_PACKETS,
                          ClientChatMessage, ServerChatMessage,
                          create_entity_data, UpdateFinished, CurrentTime,
                          ServerUpdate, ServerFull, ServerMismatch,
-                         ChunkItemData, ChunkItems, InteractPacket,
-                         PickupAction, HitPacket, ShootPacket)
+                         INTERACT_DROP, INTERACT_PICKUP, ChunkItemData,
+                         ChunkItems, InteractPacket, PickupAction,
+                         HitPacket, ShootPacket)
 from cuwo.types import IDPool, MultikeyDict, AttributeSet
 from cuwo.vector import Vector3
 from cuwo import constants
 from cuwo.common import (get_clock_string, parse_clock, parse_command,
-                         get_chunk, filter_string, get_distance_3d,
+                         filter_string, get_distance_3d,
                          get_needed_total_xp, get_entity_type_level_str)
 from cuwo.script import ScriptManager
 from cuwo.config import ConfigObject
@@ -50,7 +51,7 @@ import json
 import math
 import random
 import pprint
-
+import traceback
 
 # initialize packet instances for sending
 join_packet = JoinPacket()
@@ -74,6 +75,7 @@ class CubeWorldConnection(Protocol):
     login_id = None
     change_index = -1
     scripts = None
+    chunk = None
 
     old_name = None
     old_pos = None
@@ -105,7 +107,7 @@ class CubeWorldConnection(Protocol):
             return
         self.connection_state = 1
         server = self.server
-        if len(server.connections) >= self.server.config.base.max_players:
+        if len(server.connections) >= server.config.base.max_players:
             # For being able to allow joining by external scritps although server is full
             ret = self.scripts.call('on_join_full_server').result
             if ret is not True:
@@ -154,19 +156,23 @@ class CubeWorldConnection(Protocol):
         if self.scripts is not None:
             self.scripts.unload()
 
-
     # packet methods
 
     def send_packet(self, packet):
         self.transport.write(write_packet(packet))
 
     def on_packet(self, packet):
+        if self.connection_state < 0:
+            return
+        if packet is None:
+            print 'Invalid packet received'
+            self.disconnect()
+            raise StopIteration()
         handler = self.packet_handlers.get(packet.packet_id, None)
         if handler is None:
             # print 'Unhandled client packet: %s' % packet.packet_id
             return
         handler(packet)
-        self.packet_count += 1
 
     def on_version_packet(self, packet):
         if packet.version != constants.CLIENT_VERSION:
@@ -179,27 +185,28 @@ class CubeWorldConnection(Protocol):
         join_packet.entity_id = self.entity_id
         self.connection_state = 2
         self.send_packet(join_packet)
-        seed_packet.seed = self.server.config.base.seed
+        seed_packet.seed = server.config.base.seed
         self.send_packet(seed_packet)
 
     def on_entity_packet(self, packet):
         if self.entity_data is None:
             self.entity_data = create_entity_data()
-            self.server.world.register(self.position.x, self.position.y, self.position.z, self.entity_id, self)
         mask = packet.update_entity(self.entity_data)
         self.entity_data.mask |= mask
         if self.connection_state==2 and getattr(self.entity_data, 'name', None):
             self.on_join()
             return
+
         self.scripts.call('on_entity_update', mask=mask)
+        # XXX clean this up
         if entity.is_pos_set(mask):
-            self.check_pos()
+            self.on_pos_update()
         if entity.is_mode_set(mask):
             self.scripts.call('on_mode_update')
         if entity.is_class_set(mask):
             self.scripts.call('on_class_update')
         if entity.is_name_set(mask):
-            self.check_name()
+            self.scripts.call('on_name_update')
         if entity.is_multiplier_set(mask):
             self.scripts.call('on_multiplier_update')
         if entity.is_level_set(mask):
@@ -212,6 +219,21 @@ class CubeWorldConnection(Protocol):
             self.scripts.call('on_appearance_update')
         if entity.is_charged_mp_set(mask):
             self.scripts.call('on_charged_mp_update')
+        if entity.is_flags_set(mask):
+            self.scripts.call('on_flags_update')
+        if entity.is_consumable_set(mask):
+            self.scripts.call('on_consumable_update')
+
+    def on_chunk(self, data):
+        self.chunk = data
+
+    def on_pos_update(self):
+        if self.server.world:
+            chunk = self.server.world.get_chunk_scaled(self.position.x, self.position.y)
+            if chunk != self.chunk:
+                self.chunk = chunk
+                self.scripts.call('on_chunk_update')
+        self.scripts.call('on_pos_update')
 
     def on_chat_packet(self, packet):
         message = filter_string(packet.value).strip()
@@ -227,55 +249,50 @@ class CubeWorldConnection(Protocol):
 
     def on_interact_packet(self, packet):
         interact_type = packet.interact_type
-        pos = self.position
-        pos.z -= constants.BLOCK_SCALE
-        res = self.scripts.call('on_interact', interact_type=interact_type).result
-        if res is False:
-            return
-        if interact_type == constants.INTERACT_DROP:
-            res = self.scripts.call('on_drop', item_data=packet.item_data).result
-            if res is False:
+        item = packet.item_data
+        if interact_type == INTERACT_DROP:
+            pos = self.position.copy()
+            pos.z -= constants.BLOCK_SCALE
+            if self.scripts.call('on_drop', item=item,
+                                 pos=pos).result is False:
                 return
             self.server.drop_item(packet.item_data, pos)
-        elif interact_type == constants.INTERACT_PICKUP:
-            res = self.scripts.call('on_pickup', item_data=packet.item_data).result
-            if res is False:
-                return
+        elif interact_type == INTERACT_PICKUP:
             try:
                 item = self.server.remove_item(packet.chunk_x, packet.chunk_y, packet.item_index)
-                if not item:
-                    return
-                self.give_item(item)
-            except KeyError:
-                pass
+            except IndexError:
+                return
+            self.give_item(item)
 
     def on_hit_packet(self, packet):
-        target = self.server.world.locatables[packet.target_id]
+        try:
+            target = self.server.entities[packet.target_id]
+        except KeyError:
+            return
         if constants.MAX_DISTANCE > 0:
-            edist = get_distance_3d(self.entity_data.x,
-                                    self.entity_data.y,
-                                    self.entity_data.z,
-                                    target.entity_data.x,
-                                    target.entity_data.y,
-                                    target.entity_data.z)
+            edist = get_distance_3d(self.position.x,
+                                    self.position.y,
+                                    self.position.z,
+                                    target.entity_data.pos.x,
+                                    target.entity_data.pos.y,
+                                    target.entity_data.pos.z)
             if edist > constants.MAX_DISTANCE:
                 print '[ANTICHEAT BASE] Player %s tried to attack target that is %s away!' % (self.name, edist)
                 self.kick('Range error')
                 return
-        res = self.scripts.call('on_hit', target, packet.damage)
-        if res is False:
+        if self.scripts.call('on_hit',
+                             target=target,
+                             packet=packet).result is False:
             return
         self.server.update_packet.player_hits.append(packet)
         if packet.damage <= 0:
             return
-        if target.hp <= 0:
-            target.hp = 0
-            return
         if packet.damage > 1000:
             packet.damage = 1000
         if target.hp > packet.damage:
-            res = self.scripts.call('on_damage', target, packet.damage)
-            if res is False or res <= 0:
+            if self.scripts.call('on_damage',
+                                 target=target,
+                                 packet=packet).result is False:
                 return
             target.hp -= packet.damage
         else:
@@ -401,7 +418,6 @@ class CubeWorldConnection(Protocol):
             return
         return event.message
 
-
     # other methods
 
     def send_chat(self, value):
@@ -414,9 +430,6 @@ class CubeWorldConnection(Protocol):
         action = PickupAction()
         action.entity_id = self.entity_id
         action.item_data = item
-        res = self.scripts.call('on_give_item', action=action)
-        if res is False:
-            return
         self.server.update_packet.pickups.append(action)
 
     def send_lines(self, lines):
@@ -428,8 +441,7 @@ class CubeWorldConnection(Protocol):
     def heal(self, amount=None, reason=None):
         if (amount is not None and amount <= 0) or (hp >= constants.PLAYER_MAX_HEALTH):
             return False
-        res = self.scripts.call('on_heal', amount, reason)
-        if res is False:
+        if self.scripts.call('on_heal', amount, reason).result is False:
             return False
         if amount is None or amount + hp > constants.PLAYER_MAX_HEALTH:
             self.entity_data.hp = constants.PLAYER_MAX_HEALTH
@@ -445,8 +457,7 @@ class CubeWorldConnection(Protocol):
             self.send_chat(reason)
 
     def damage(self, damage=0, critical=0, stun_duration=0, reason=None):
-        res = self.scripts.call('on_damage', damage, critical, stun_duration, reason)
-        if res is False:
+        if self.scripts.call('on_damage', damage, critical, stun_duration, reason).result is False:
             return False
         packet = HitPacket()
         packet.entity_id = self.entity_id
@@ -470,8 +481,7 @@ class CubeWorldConnection(Protocol):
     def kill(self, killer=None, reason=None):
         if not damage(self.entity_data.hp + 100, 1, 0):
             return False
-        res = self.scripts.call('on_kill', killer=killer, reason=reason)
-        if res is False:
+        if self.scripts.call('on_kill', killer=killer, reason=reason).result is False:
             return False
         packet = KillAction()
         if killer is None:
@@ -485,9 +495,9 @@ class CubeWorldConnection(Protocol):
         self.entity_data.changed = True
         if reason is None:
             if killer is self:
-                self.send_chat('+ You commited suicide')
+                self.send_chat('You commited suicide')
             else:
-                self.send_chat('+ You have been killed by %s' % killer.entity_data.name)
+                self.send_chat('You have been killed by %s' % killer.entity_data.name)
         elif reason is not False:
             self.send_chat(reason)
         return True
@@ -508,9 +518,9 @@ class CubeWorldConnection(Protocol):
         res = self.scripts.call('on_teleport', pos=self.position)
         if res is False:
             return
-        self.entity_data.x = to_x
-        self.entity_data.y = to_y
-        self.entity_data.z = to_z
+        self.entity_data.pos.x = to_x
+        self.entity_data.pos.y = to_y
+        self.entity_data.pos.z = to_z
         # To not confuse anti cheating system
         self.last_pos = self.position
         self.entity_data.changed = True
@@ -590,31 +600,32 @@ class CubeWorldConnection(Protocol):
                 return False
         return True
 
-
     # convienience methods
 
     @property
     def position(self):
-        if not self.entity_data:
-            return None
-        return Vector3(self.entity_data.x,
-                       self.entity_data.y,
-                       self.entity_data.z)
+        if not self.entity_data.pos:
+            return Vector3()
+        return Vector3(self.entity_data.pos.x,
+                       self.entity_data.pos.y,
+                       self.entity_data.pos.z)
 
 
     @property
     def name(self):
-        if not self.entity_data:
+        if not self.entity_data.name:
             return None
         return self.entity_data.name
 
 
 class CubeWorldServer(Factory):
+    items_changed = False
     exit_code = 0
     last_secondly_check = None
     updates_since_last_second = 0
     updates_per_second = 0
     current_change_index = 0
+    world = None
 
     def __init__(self, config):
         self.config = config
@@ -627,7 +638,7 @@ class CubeWorldServer(Factory):
         self.connections = set()
         self.players = MultikeyDict()
 
-        self.chunk_items = collections.defaultdict(list)
+        self.entities = {}
         self.entity_ids = IDPool(1)
 
         # DATABASE
@@ -674,37 +685,33 @@ class CubeWorldServer(Factory):
         if database.is_banned_ip(self.db_con, addr.host):
             print '[INFO] Banned client %s tried to join.' % addr.host
             return 'You are banned from this server.'
-        ret = self.scripts.call('on_connection_attempt', address=addr).result
-        if ret is False:
+        if self.scripts.call('on_connection_attempt', address=addr).result is False:
             print '[WARNING] Connection attempt for %s blocked by script!' % addr.host
             return False
         return CubeWorldConnection(self, addr)
 
     def remove_item(self, chunk_x, chunk_y, index):
-        items = self.world.get_chunk_unscaled(chunk_x, chunk_y).item_list
-        if not items:
-            return None
-        ret = items.pop(index, None)
-        if ret:
-            self.broadcast_chunkitems()
-            return ret
-        return None
+        print '[DEBUG] Removing item #%s from chunk %s,%s' % (index, chunk_x, chunk_y)
+        chunk = self.world.get_chunk_unscaled(chunk_x, chunk_y)
+        ret = chunk.item_list.pop(index)
+        self.items_changed = True
+        return ret.item_data
 
     def drop_item(self, item_data, pos):
-        chunk_items = self.world.get_chunk_scaled(pos.x, pos.y).item_list
-        if len(chunk_items) > constants.MAX_ITEMS_PER_CHUNK:
+        print '[DEBUG] Dropping item at %s,%s' % (pos.x, pos.y)
+        chunk = self.world.get_chunk_scaled(pos.x, pos.y)
+        if len(chunk.item_list) > constants.MAX_ITEMS_PER_CHUNK:
             print '[WARNING] To many items at Chunk(%s,%s)!' % (math.floor(pos.x / constants.CHUNK_SCALE), math.floor(pos.y / constants.CHUNK_SCALE))
             return False
         item = ChunkItemData()
-        item.pos = pos
         item.drop_time = 750
         item.scale = 0.1
         item.rotation = 185.0
         item.something3 = item.something5 = item.something6 = 0
+        item.pos = pos
         item.item_data = item_data
-        chunk_items.append(item)
-        self.broadcast_chunkitems()
-        return item
+        chunk.item_list.append(item)
+        self.items_changed = True
 
     def update(self):
         self.scripts.call('update')
@@ -739,41 +746,27 @@ class CubeWorldServer(Factory):
                         elif dpr < 0:
                             print "\rPackets/s for %s: %s (-%s)" % (player.name, player.packet_rate, dpr)
 
-
-        #for entity_id, entity in self.entities.iteritems():
-        #    entity_packet.set_entity(entity, entity_id, entity.mask)
-        #    entity.mask = 0
-        #    self.broadcast_packet(entity_packet)
-        #self.broadcast_packet(update_finished_packet)
-        updated = set()
-        for player in self.players.values():
-            nearby_locatables = self.world.get_locatables(player.position.x,
-                                                          player.position.y,
-                                                          player.position.z,
-                                                          constants.MAX_DISTANCE)
-            if player.entity_data.mask > 0:
-                entity_packet.set_entity(player.entity_data, player.entity_id, player.entity_data.mask)
-                self.broadcast_packet(entity_packet)
-                player.entity_data.mask = 0
-            updated.add(player.entity_id)
-            locatable_iter = iter(nearby_locatables)
-            while True:
-                try:
-                    locatable = next(locatable_iter)
-                    if (not locatable) or (not locatable.obj):
-                        continue
-                    if locatable.id in updated:
-                        continue
-                    updated.add(locatable.id)
-                    if locatable.obj.mask > 0:
-                        entity_packet.set_entity(locatable.obj, locatable.id, locatable.obj.mask)
-                        self.broadcast_packet(entity_packet)
-                        locatable.obj.mask = 0
-                except StopIteration:
-                    break
-                except:
-                    continue
+        # entity updates
+        for entity_id, entity in self.entities.iteritems():
+            entity_packet.set_entity(entity, entity_id, entity.mask)
+            entity.mask = 0
+            self.broadcast_packet(entity_packet)
         self.broadcast_packet(update_finished_packet)
+
+        # other updates
+        update_packet = self.update_packet
+        if self.items_changed:
+            for chunk in self.world.chunks.values():
+                item_list = ChunkItems()
+                item_list.chunk_x = chunk.chunk_x
+                item_list.chunk_y = chunk.chunk_y
+                item_list.items = chunk.item_list
+                update_packet.chunk_items.append(item_list)
+                for item in chunk.item_list:
+                    item.drop_time = 0
+            self.items_changed = False
+        self.broadcast_packet(update_packet)
+        update_packet.reset()
 
         if update_seconds_delta != 0:
             for player in self.players.values():
@@ -786,7 +779,7 @@ class CubeWorldServer(Factory):
                 else:
                     print '[WARNING] Connection timed out for Player %s #%s' % (player.entity_data.name, player.entity_id)
                     player.kick('Connection timed out')
-            self.broadcast_time()
+        self.broadcast_time()
 
     def hit_entity_id(self, id):
         return True
@@ -796,16 +789,6 @@ class CubeWorldServer(Factory):
         packet.entity_id = 0
         packet.value = value
         self.broadcast_packet(packet)
-
-    def broadcast_chunkitems(self):
-        update_packet = self.update_packet
-        for chunk, items in self.chunk_items.iteritems():
-            item_list = ChunkItems()
-            item_list.chunk_x, item_list.chunk_y = chunk
-            item_list.items = items
-            update_packet.chunk_items.append(item_list)
-        self.broadcast_packet(update_packet)
-        update_packet.reset()
 
     def broadcast_packet(self, packet):
         data = write_packet(packet)
@@ -831,28 +814,11 @@ class CubeWorldServer(Factory):
 
     # script methods
 
-    def load_script_source(self, name):
-        path = './scripts/%s.py' % name
-        try:
-            return imp.load_source(name, path)
-        except IOError:
-            pass
-
-    def load_script_zip(self, name):
-        path = './scripts/%s.zip' % name
-        try:
-            return zipimport.zipimporter(path).load_module(name)
-        except ImportError:
-            pass
-        except zipimport.ZipImportError:
-            pass
-
     def load_script(self, name):
-        for f in (self.load_script_source, self.load_script_zip):
-            mod = f(name)
-            if mod:
-                break
-        else:
+        try:
+            mod = __import__('scripts.%s' % name, globals(), locals(), [name])
+        except ImportError, e:
+            traceback.print_exc(e)
             return None
         script = mod.get_class()(self)
         print '[INFO] Loaded script %r' % name
@@ -868,6 +834,22 @@ class CubeWorldServer(Factory):
     def get_mode(self):
         return self.scripts.call('get_mode').result
 
+    # command convenience methods (for /help)
+
+    def get_commands(self):
+        for script in self.scripts.get():
+            if script.commands is None:
+                continue
+            for command in script.commands.itervalues():
+                yield command
+
+    def get_command(self, name):
+        for script in self.scripts.get():
+            if script.commands is None:
+                continue
+            command = script.commands.get(name, None)
+            if command:
+                return command
 
     # data store methods
 
@@ -886,12 +868,10 @@ class CubeWorldServer(Factory):
         self.start_time = reactor.seconds()
         self.extra_elapsed_time = day * constants.MAX_TIME + time
 
-
     def get_elapsed_time(self):
         dt = reactor.seconds() - self.start_time
         dt *= self.config.base.time_modifier * constants.NORMAL_TIME_SPEED
         return dt * 1000 + self.extra_elapsed_time
-
 
     def get_time(self):
         return int(self.get_elapsed_time() % constants.MAX_TIME)
@@ -902,13 +882,11 @@ class CubeWorldServer(Factory):
     def get_clock(self):
         return get_clock_string(self.get_time())
 
-
     # stop/restart
 
     def stop(self, code=None):
         self.exit_code = code
         reactor.stop()
-
 
     # twisted wrappers
 
@@ -928,9 +906,10 @@ class CubeWorldServer(Factory):
 def main():
     # for py2exe
     if hasattr(sys, 'frozen'):
-        path = os.path.dirname(
-            unicode(sys.executable, sys.getfilesystemencoding()))
-        sys.path.append(path)
+        path = os.path.dirname(unicode(sys.executable,
+                                       sys.getfilesystemencoding()))
+        root = os.path.abspath(os.path.join(path, '..'))
+        sys.path.append(root)
 
     config = ConfigObject('./config')
     server = CubeWorldServer(config)

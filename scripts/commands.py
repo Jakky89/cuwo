@@ -20,6 +20,9 @@ Default set of commands bundled with cuwo
 """
 
 from cuwo.script import ServerScript, command, admin
+from cuwo.common import get_chunk
+from cuwo.constants import CLASS_NAMES, CLASS_SPECIALIZATIONS
+from cuwo.packet import HitPacket, HIT_NORMAL
 from cuwo.vector import Vector3
 from twisted.internet import reactor
 from cuwo import database
@@ -39,30 +42,82 @@ def get_class():
 
 @command
 @admin
-def say(script, *args):
-    message = ' '.join(args)
+def say(script, *message):
+    """Sends a global server message."""
+    message = ' '.join(message)
     script.server.send_chat(message)
+
+
+@command
+def server(script):
+    """Returns information about the server's platform."""
+    msg = 'Server is running on %r' % platform.system()
+    revision = script.server.git_rev
+    if revision is not None:
+        msg += ', revision %s' % revision
+    return msg
+
+
+@command
+def register(script, password=None, repeating=None):
+    if not password or not repeating:
+        return '[INFO] Use /register <Password> <Password Repeating> to register in order to get your own unique numeric ID.'
+    if password != repeating:
+        return '[REGISTRATION] Your password does not equal its repeating.'
+    regid = database.register_player(script.server.db_con, script.connection.name, script.connection.address.host, password)
+    if regid:
+        database.update_player(script.server.db_con, regid, script.connection.name)
+        return '[REGISTRATION] You can use /login %s %s now everytime you want to login.' % (regid, password)
+    return '[ERROR] Registration failed.'
+
+
+@command
+def login(script, id, password):
+    if not id or not password:
+        return '[INFO] Use /login <ID> <Password> when you are already registered else use /register <Password> <Password Repeating> to register in order to get your own unique numeric ID.'
+    try:
+        id = int(id)
+    except Exception:
+        return '[ERROR] Invalid ID given.'
+    dbres = database.login_player(script.server.db_con, script.connection.name, id, password)
+    if dbres:
+        script.connection.login_id = id
+        database.update_player(script.server.db_con, id, script.connection.name)
+        if not dbres.rank is None:
+            script.connection.rights.update(dbres.rank)
+            return '[LOGIN] Successfully logged in as %s %s. Your last login name was %s with IP %s.' % (dbres.rank.upper(), script.connection.name, dbres.ingame_name, dbres.last_ip)
+        return '[LOGIN] Successfully logged in as %s. Your last login name was %s with IP %s.' % (script.connection.name, dbres.ingame_name, dbres.last_ip)
+    else:
+        return '[ERROR] To many arguments!'
+    return '[ERROR] Login failed.'
+
+
+@command
+def help(script, name=None):
+    """Returns information about commands."""
+    if name is None:
+        commands = [item.name for item in script.get_commands()]
+        commands.sort()
+        return 'Commands: ' + ', '.join(commands)
+    else:
+        command = script.get_command(name)
+        if command is None:
+            return 'No such command'
+        return command.get_help()
 
 
 @command
 @admin
 def kick(script, name):
+    """Kicks the specified player."""
     try:
         player = script.get_player(name)
         if player:
             player.kick('Kicked by Admin')
             return '[SUCCESS] Kicked %s' % name
     except:
-        pass
-    return '[ERROR] Player %s could not be kicked!' % name
+        return '[ERROR] Player %s could not be kicked!' % name
 
-
-@command
-@admin
-def kill(script, name=None):
-    player = script.get_player(name)
-    player.kill(script.connection)
-    return None
 
 
 @command
@@ -88,6 +143,7 @@ def setrank(script, name, rank):
 @command
 @admin
 def setclock(script, value):
+    """Sets the time of day. Format: hh:mm."""
     try:
         script.server.set_clock(value)
         return '[SUCCESS] Time set to %s' % value
@@ -132,6 +188,37 @@ def restart(script, delay=10, *args):
     # reactor.callLater(10, 'restart', delay)
 
 
+
+@command
+@admin
+def kill(script, name=None):
+    """Kills a player."""
+    player = script.get_player(name)
+    player.kill(script.connection)
+    return None
+
+
+@command
+@admin
+def stun(script, name, milliseconds=1000):
+    """Stuns a player for a specified duration of time."""
+    player = script.get_player(name)
+    damage_player(script, player, stun_duration=int(milliseconds))
+    message = '%s was stunned' % player.name
+    print message
+    script.server.send_chat(message)
+
+
+@command
+@admin
+def heal(script, name=None, hp=1000):
+    """Heals a player by a specified amount."""
+    player = script.get_player(name)
+    damage_player(script, player, damage=-int(hp))
+    message = '%s was healed' % player.name
+    return message
+
+
 @command
 @admin
 def stop(script, delay=10):
@@ -141,40 +228,6 @@ def stop(script, delay=10):
         return
     reactor.callLater(delay, script.server.stop)
     script.server.send_chat('The server will shut down in %s seconds.' % delay)
-
-
-@command
-def register(script, password=None, repeating=None):
-    if not password or not repeating:
-        return '[INFO] Use /register <Password> <Password Repeating> to register in order to get your own unique numeric ID.'
-    if password != repeating:
-        return '[REGISTRATION] Your password does not equal its repeating.'
-    regid = database.register_player(script.server.db_con, script.connection.name, script.connection.address.host, password)
-    if regid:
-        database.update_player(script.server.db_con, regid, script.connection.name)
-        return '[REGISTRATION] You can use /login %s %s now everytime you want to login.' % (regid, password)
-    return '[ERROR] Registration failed.'
-
-
-@command
-def login(script, id, password):
-    if not id or not password:
-        return '[INFO] Use /login <ID> <Password> when you are already registered else use /register <Password> <Password Repeating> to register in order to get your own unique numeric ID.'
-    try:
-        id = int(id)
-    except Exception:
-        return '[ERROR] Invalid ID given.'
-    dbres = database.login_player(script.server.db_con, script.connection.name, id, password)
-    if dbres:
-        script.connection.login_id = id
-        database.update_player(script.server.db_con, id, script.connection.name)
-        if not dbres.rank is None:
-            script.connection.rights.update(dbres.rank)
-            return '[LOGIN] Successfully logged in as %s %s. Your last login name was %s with IP %s.' % (dbres.rank.upper(), script.connection.name, dbres.ingame_name, dbres.last_ip)
-        return '[LOGIN] Successfully logged in as %s. Your last login name was %s with IP %s.' % (script.connection.name, dbres.ingame_name, dbres.last_ip)
-    else:
-        return '[ERROR] To many arguments!'
-    return '[ERROR] Login failed.'
 
 
 @command
@@ -202,15 +255,20 @@ def list(script):
 
 
 @command
-def whois(script, name=None):
+def player(script, name):
+    """Returns information about a player."""
     player = script.get_player(name)
-    if not player:
-        return '[ERROR] Could not get player by that name: %s' % name
-    return '[INFO] %s is %s' % (player.name, common.get_entity_type_level_str(player.entity_data))
+    entity = player.entity_data
+    typ = entity.class_type
+    klass = CLASS_NAMES[typ]
+    spec = CLASS_SPECIALIZATIONS[typ][entity.specialization]
+    level = entity.level
+    return "'%s' is a lvl %s %s (%s)" % (player.name, level, klass, spec)
 
 
 @command
 def tell(script, name=None, *args):
+    """Sends a private message to a player."""
     if not name:
         return '[INFO] Command to tell something to a specific player: /tell <player> <message>'
     try:
@@ -225,3 +283,32 @@ def tell(script, name=None, *args):
     except:
         pass
     return '[EXCEPTION] Could not tell message to %s!' % player.name
+
+
+@command
+def whereis(script, name=None):
+    """Shows where a player is in the world."""
+    player = script.get_player(name)
+    if player is script.connection:
+        message = 'You are at %s'
+    else:
+        message = '%s is at %%s' % player.name
+    return message % (get_chunk(player.position),)
+
+
+@command
+def player(script, name):
+    """Returns information about a player."""
+    player = script.get_player(name)
+    entity = player.entity_data
+    typ = entity.class_type
+    klass = CLASS_NAMES[typ]
+    spec = CLASS_SPECIALIZATIONS[typ][entity.specialization]
+    level = entity.level
+    return "'%s' is a lvl %s %s (%s)" % (player.name, level, klass, spec)
+
+
+@command
+def scripts(script):
+    """Lists the currently loaded scripts."""
+    return 'Scripts: ' + ', '.join(script.server.scripts.items)

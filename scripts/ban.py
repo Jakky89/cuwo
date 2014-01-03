@@ -19,8 +19,7 @@
 Ban management
 """
 
-
-from cuwo.script import ServerScript, command, admin, get_player
+from cuwo.script import ServerScript, command, admin
 from twisted.internet import reactor
 from cuwo import database
 
@@ -32,6 +31,7 @@ DEFAULT_REASON = 'No reason specified'
 
 
 class BanServer(ServerScript):
+
     def ban(self, player_name, ip_address, ban_reason=None):
         database.ban_ip(self.server.db_con, ip_address, script.entity_data.name, reactor.seconds()+86400, ban_reason)
         for connection in self.server.connections.copy():
@@ -41,6 +41,17 @@ class BanServer(ServerScript):
         message = PLAYER_BANNED.format(name = player_name, reason = ban_reason)
         print message
         self.server.send_chat(message)
+        return True
+
+    def unban(self, ip):
+        database.unban_ip(self.server.db_con, ip_address)
+        return True
+
+    def on_connection_attempt(self, event):
+        if database.is_banned_ip(self.server.db_con, event.address.host):
+            return SELF_BANNED
+        return
+
 
 def get_class():
     return BanServer
@@ -48,7 +59,18 @@ def get_class():
 
 @command
 @admin
-def ban(script, name, *args):
-    player = get_player(script.server, name)
-    reason = ' '.join(args) or DEFAULT_REASON
-    script.parent.ban(player.name, player.address.host, reason)
+def ban(script, name, *reason):
+    """Bans a player."""
+    player = script.get_player(name)
+    reason = ' '.join(reason) or DEFAULT_REASON
+    script.parent.ban(player.address.host, reason)
+
+
+@command
+@admin
+def unban(script, ip):
+    """Unbans a player by IP."""
+    if script.parent.unban(ip):
+        return 'IP "%s" unbanned' % ip
+    else:
+        return 'IP not found'

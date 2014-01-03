@@ -219,6 +219,7 @@ class ServerScript(BaseScript):
         f = self.commands.get(command, None)
         if not f:
             return
+        user.parent = self  # for ScriptInterface
         try:
             ret = f(user, *args) or ''
         except InvalidPlayer:
@@ -242,9 +243,69 @@ class ScriptInterface(object):
         self.rights = AttributeSet(rights)
         self.server = server
         self.connection = self
+        self.parent = None  # set by call_command
 
     def get_player(self, name):
         return get_player(self.server, name)
+
+
+# command decorators/class implementation
+
+class Command(object):
+    def __init__(self, func):
+        self.func = func
+        self.original = original = getattr(func, 'func', func)
+        self.name = original.func_name
+        self.module = original.__module__
+        self.user_types = getattr(original, 'user_types', None)
+        self.doc = original.__doc__
+        self.__call__ = func
+
+        # parse function object information
+
+        # get min args
+        func_info = inspect.getargspec(original)
+        self.min_args = len(func_info.args) - 1
+        if not func_info.defaults is None:
+            self.min_args -= len(func_info.defaults)
+
+    def __call__(self, *arg, **kw):
+        return self.func(*arg, **kw)
+
+    def is_compatible(self, rights):
+        if self.user_types is None:
+            return True
+        return not rights.isdisjoint(self.user_types)
+
+    def get_help(self):
+        syntax = self.get_syntax()
+        if self.doc is None:
+            return syntax
+        return "%s\n%s" % (self.doc, syntax)
+
+    def get_syntax(self):
+        func_info = inspect.getargspec(self.original)
+        has_defaults = func_info.defaults is not None
+        if has_defaults:
+            defaults_start = len(func_info.args) - len(func_info.defaults)
+        arguments = [self.name]
+        for i in xrange(1, len(func_info.args)):
+            argument = func_info.args[i]
+            if not has_defaults:
+                arguments.append(argument)
+                continue
+            defaults_index = i - defaults_start
+            if defaults_index >= 0:
+                default = func_info.defaults[defaults_index]
+                if default is None:
+                    arguments.append('[%s]' % argument)
+                else:
+                    arguments.append('[%s=%s]' % (argument, default))
+                continue
+            arguments.append(argument)
+        if func_info.varargs is not None:
+            arguments.append('[%s]' % func_info.varargs)
+        return 'Syntax: /' + ' '.join(arguments)
 
 
 # decorators for commands

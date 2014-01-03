@@ -78,7 +78,7 @@ class ConsoleInput(LineReceiver):
 
     def __init__(self, server):
         self.server = server
-        self.interface = ScriptInterface(server, 'admin', 'console')
+        self.interface = ScriptInterface('Console', server, 'admin', 'console')
 
     def lineReceived(self, line):
         if line.startswith('/'):
@@ -89,19 +89,24 @@ class ConsoleInput(LineReceiver):
             ret = self.server.call_command(self.interface, command, args)
             if not ret:
                 return
-            self.sendLine(ret)
+            self.sendLine(ret.encode(stdout.encoding, 'replace'))
         else:
             self.server.send_chat(line)
 
 
 class ConsoleServer(ServerScript):
     connection_class = None
+    io = None
 
     def on_load(self):
+        if not stdout.isatty():
+            return
         self.console = ConsoleInput(self.server)
         self.io = StandardIO(self.console)
 
     def on_unload(self):
+        if self.io is None:
+            return
         self.io.loseConnection()
 
 

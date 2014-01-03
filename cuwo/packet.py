@@ -1,4 +1,4 @@
-# Copyright (c) Mathias Kaerlev, Somer Hayter, sarcengm and Jakky89 2013.
+# Copyright (c) Mathias Kaerlev 2013.
 #
 # This file is part of cuwo.
 #
@@ -21,26 +21,20 @@
 # definitions in your own work, it would be nice with a little notice of
 # where you got them from (i.e. cuwo) :-)
 
-
-# See: http://www.cubeworldwiki.net/index.php/Multiplayer_Protocol
-# Keep in mind that Cube World is closed source and only very few is known
-# about internals like how the multiplayer protocol is working
-
-
 from cuwo.entity import (EntityData, AppearanceData, ItemData,
                          read_masked_data, write_masked_data, get_masked_size)
 from cuwo.sounds import SOUNDS
 from cuwo.loader import Loader
 from cuwo.bytes import ByteReader, ByteWriter
+from cuwo.constants import FULL_MASK, BLOCK_SCALE 
 from cuwo.exceptions import OutOfData
-from cuwo.vector import Vector3
 import zlib
 
 
 def create_entity_data():
     data = EntityData()
     data.appearance = AppearanceData()
-    data.item_data = ItemData()
+    data.consumable = ItemData()
     data.equipment = []
     for _ in xrange(13):
         data.equipment.append(ItemData())
@@ -93,7 +87,7 @@ class JoinPacket(Packet):
         if reader.read_uint32() != 0:
             raise NotImplementedError()
             return
-        self.entity_id = reader.read_uint64()
+        self.entity_id = reader.read_uint64()  # must be > 1 and < 10
         self.data = EntityData()
         self.data.read(reader)
 
@@ -117,7 +111,7 @@ class SeedData(Packet):
 
 class EntityUpdate(Packet):
     def read(self, reader):
-        size = reader.read_int32()
+        size = reader.read_uint32()
         self.data = zlib.decompress(reader.read(size))
         reader = ByteReader(self.data)
         self.entity_id = reader.read_uint64()
@@ -128,6 +122,8 @@ class EntityUpdate(Packet):
         return read_masked_data(entity, reader)
 
     def set_entity(self, entity, entity_id, mask=None):
+        if mask is None:
+            mask = FULL_MASK
         writer = ByteWriter()
         writer.write_uint64(entity_id)
         write_masked_data(entity, writer, mask)
@@ -176,29 +172,55 @@ class Unknown3(Packet):
 
 class Packet4Struct1(Loader):
     def read(self, reader):
-        self.something = reader.read_uint32()
-        self.something2 = reader.read_uint32()
-        self.something3 = reader.read_uint32()
-        self.something4 = reader.read_uint8()
-        self.interact_type = reader.read_uint8()
-        self.something6 = reader.read_uint8()
-        self.something7 = reader.read_uint8()
+        self.block_pos = reader.read_ivec3()
+        self.color_red = reader.read_uint8()
+        self.color_green = reader.read_uint8()
+        self.color_blue = reader.read_uint8()
+        # v  0 = Invisible, 1 = Solid, 2 = Water, 3 = Flat water, ...
+        self.block_type = reader.read_uint8()
         self.something8 = reader.read_uint32()
 
     def write(self, writer):
-        writer.write_uint32(self.something)
-        writer.write_uint32(self.something2)
-        writer.write_uint32(self.something3)
-        writer.write_uint8(self.something4)
-        writer.write_uint8(self.interact_type)
-        writer.write_uint8(self.something6)
-        writer.write_uint8(self.something7)
+        writer.write_ivec3(self.block_pos)
+        writer.write_uint8(self.color_red)
+        writer.write_uint8(self.color_green)
+        writer.write_uint8(self.color_blue)
+        writer.write_uint8(self.block_type)
         writer.write_uint32(self.something8)
+
+
+class ParticleData(Loader):
+    def read(self, reader):
+        self.pos = reader.read_qvec3()
+        self.accel = reader.read_vec3()
+        self.color_red = reader.read_float()
+        self.color_blue = reader.read_float()
+        self.color_green = reader.read_float()
+        self.color_alpha = reader.read_float()
+        self.scale = reader.read_float()
+        self.count = reader.read_uint32()
+        # v  0 = Solid, 1 = Bombs, 3 = No accel/spread, 4 = No Gravity, ...
+        self.particle_type = reader.read_uint32()
+        self.spreading = reader.read_float()
+        self.something18 = reader.read_uint32()
+
+    def write(self, writer):
+        writer.write_qvec3(self.pos)
+        writer.write_vec3(self.accel)
+        writer.write_float(self.color_red)
+        writer.write_float(self.color_blue)
+        writer.write_float(self.color_green)
+        writer.write_float(self.color_alpha)
+        writer.write_float(self.scale)
+        writer.write_uint32(self.count)
+        writer.write_uint32(self.particle_type)
+        writer.write_float(self.spreading)
+        writer.write_uint32(self.something18)
 
 
 class SoundAction(Loader):
     def read(self, reader):
-        self.pos = reader.read_vec3() * 65536.0
+        self.pos = reader.read_vec3() * float(BLOCK_SCALE)
         self.sound_index = reader.read_uint32()
         self.pitch = reader.read_float()
         self.volume = reader.read_float()
@@ -207,7 +229,7 @@ class SoundAction(Loader):
         return SOUNDS[self.sound_index]
 
     def write(self, writer):
-        writer.write_vec3(self.pos * 65536.0)
+        writer.write_vec3(self.pos / float(BLOCK_SCALE))
         writer.write_uint32(self.sound_index)
         writer.write_float(self.pitch)
         writer.write_float(self.volume)
@@ -215,7 +237,7 @@ class SoundAction(Loader):
 
 class PickupAction(Loader):
     def read(self, reader):
-        self.entity_id = reader.read_uint64() # player who picked up
+        self.entity_id = reader.read_uint64()  # player who picked up
         self.item_data = ItemData()
         self.item_data.read(reader)
 
@@ -230,7 +252,7 @@ class KillAction(Loader):
         self.target_id = reader.read_uint64()  # killed
         # is this actually padding? copied as part of MOVQ, but may just be
         # optimization. not used in client, it seems.
-        # could also be related to items_10, seems to use same list
+        # could also be related to DamageAction, seems to use same list
         # copy implementation
         reader.skip(4)
         self.xp_gained = reader.read_int32()
@@ -296,18 +318,19 @@ class ChunkItems(Loader):
 
 class MissionData(Loader):
     def read(self, reader):
-        self.section_x = reader.read_int32() / 8
-        self.section_y = reader.read_int32() / 8
+        self.section_x = reader.read_int32() / 8.0
+        self.section_y = reader.read_int32() / 8.0
         self.something1 = reader.read_uint32()  # padding?
         self.something2 = reader.read_uint32()  # also padding???
         # --
         self.something3 = reader.read_uint32()
-        self.something4 = reader.read_uint32()
+        self.mission_id = reader.read_uint32()
         self.something5 = reader.read_uint32()
         self.monster_id = reader.read_uint32()
         self.quest_level = reader.read_uint32()
         self.something8 = reader.read_uint8()
-        self.something9 = reader.read_uint8()
+        # 0: ready, 1: progressing, 2: finished
+        self.state = reader.read_uint8()
         reader.skip(2)
         self.something10 = reader.read_float()
         self.something11 = reader.read_float()
@@ -316,17 +339,17 @@ class MissionData(Loader):
         print vars(self)
 
     def write(self, writer):
-        writer.write_int32(self.section_x * 8)
-        writer.write_int32(self.section_y * 8)
+        writer.write_int32(self.section_x * 8.0)
+        writer.write_int32(self.section_y * 8.0)
         writer.write_uint32(self.something1)
         writer.write_uint32(self.something2)
         writer.write_uint32(self.something3)
-        writer.write_uint32(self.something4)
+        writer.write_uint32(self.mission_id)
         writer.write_uint32(self.something5)
         writer.write_uint32(self.monster_id)
         writer.write_uint32(self.quest_level)
         writer.write_uint8(self.something8)
-        writer.write_uint8(self.something9)
+        writer.write_uint8(self.state)
         writer.pad(2)
         writer.write_uint32(self.something10)
         writer.write_uint32(self.something11)
@@ -338,7 +361,7 @@ class ServerUpdate(Packet):
     def reset(self):
         self.items_1 = []
         self.player_hits = []
-        self.items_3 = []
+        self.particles = []
         self.sound_actions = []
         self.shoot_actions = []
         self.items_6 = []
@@ -357,11 +380,7 @@ class ServerUpdate(Packet):
 
         self.items_1 = read_list(reader, Packet4Struct1)
         self.player_hits = read_list(reader, HitPacket)
-
-        self.items_3 = []
-        for _ in xrange(reader.read_uint32()):
-            self.items_3.append(reader.read(72))
-
+        self.particles = read_list(reader, ParticleData)
         self.sound_actions = read_list(reader, SoundAction)
         self.shoot_actions = read_list(reader, ShootPacket)
 
@@ -387,12 +406,13 @@ class ServerUpdate(Packet):
         for _ in xrange(reader.read_uint32()):
             self.items_12.append(reader.read(40))
 
+        # objective/quests? not sure
         self.missions = read_list(reader, MissionData)
 
         debug = True
         if debug:
             v = vars(self).copy()
-            # del v['pickups']
+            del v['pickups']
             # del v['kill_actions']
             del v['damage_actions']
             del v['sound_actions']
@@ -412,11 +432,7 @@ class ServerUpdate(Packet):
 
         write_list(data, self.items_1)
         write_list(data, self.player_hits)
-
-        data.write_uint32(len(self.items_3))
-        for item in self.items_3:
-            data.write(item)
-
+        write_list(data, self.particles)
         write_list(data, self.sound_actions)
         write_list(data, self.shoot_actions)
 
@@ -459,13 +475,22 @@ class CurrentTime(Packet):
         writer.write_uint32(self.time)
 
 
+INTERACT_NPC = 2
+INTERACT_NORMAL = 3
+INTERACT_PICKUP = 5
+INTERACT_DROP = 6
+INTERACT_EXAMINE = 8
+
+
 class InteractPacket(Packet):
     def read(self, reader):
         self.item_data = ItemData()
         self.item_data.read(reader)
         self.chunk_x = reader.read_int32()
         self.chunk_y = reader.read_int32()
+        # index of item in ChunkItems
         self.item_index = reader.read_int32()
+        #
         self.something4 = reader.read_uint32()
         self.interact_type = reader.read_uint8()
         self.something6 = reader.read_uint8()
@@ -480,6 +505,12 @@ class InteractPacket(Packet):
         writer.write_uint8(self.interact_type)
         writer.write_uint8(self.something6)
         writer.write_uint16(self.something7)
+
+
+HIT_NORMAL = 0
+HIT_BLOCK = 1
+HIT_MISS = 3
+HIT_ABSORB = 5
 
 
 class HitPacket(Packet):
@@ -514,7 +545,7 @@ class HitPacket(Packet):
         writer.pad(1)
 
 
-class StealthPacket(Packet):
+class Unknown8(Packet):
     def read(self, reader):
         self.data = reader.read(40)
 
@@ -527,7 +558,7 @@ class ShootPacket(Packet):
         self.entity_id = reader.read_uint64()
         self.chunk_x = reader.read_int32()
         self.chunk_y = reader.read_int32()
-        self.interact_type = reader.read_uint32()
+        self.something5 = reader.read_uint32()
         reader.skip(4)  # 8byte struct alignment
         self.pos = reader.read_qvec3()
         self.something13 = reader.read_uint32()
@@ -535,6 +566,7 @@ class ShootPacket(Packet):
         self.something15 = reader.read_uint32()
         self.velocity = reader.read_vec3()
         self.something19 = reader.read_float()  # rand() something,
+                                                # probably damage multiplier
         self.something20 = reader.read_float()
         self.something21 = reader.read_float()
         self.something22 = reader.read_float()  # used stamina? amount of stun?
@@ -551,7 +583,7 @@ class ShootPacket(Packet):
         writer.write_uint64(self.entity_id)
         writer.write_int32(self.chunk_x)
         writer.write_int32(self.chunk_y)
-        writer.write_uint32(self.interact_type)
+        writer.write_uint32(self.something5)
         writer.pad(4)
         writer.write_qvec3(self.pos)
         writer.write_uint32(self.something13)
@@ -570,6 +602,7 @@ class ShootPacket(Packet):
         writer.pad(3)
         writer.write_uint32(self.something27)
         writer.write_uint32(self.something28)
+
 
 ENCODING = 'utf_16_le'
 
@@ -624,7 +657,7 @@ CS_PACKETS = {
     0: EntityUpdate,
     6: InteractPacket,
     7: HitPacket,
-    8: StealthPacket,
+    8: Unknown8,  # stealth
     9: ShootPacket,
     10: ClientChatMessage,
     11: ChunkDiscovered,
@@ -649,7 +682,10 @@ SC_PACKETS = {
 
 def read_packet(reader, table):
     packet_id = reader.read_uint32()
-    packet = table[packet_id]()
+    try:
+        packet = table[packet_id]()
+    except KeyError:
+        return None
     packet.read(reader)
     return packet
 
@@ -686,4 +722,6 @@ class PacketHandler(object):
         except OutOfData, e:
             if e.reader is not reader:
                 raise e
+        except StopIteration:
+            return
         self.data = self.data[pos:]

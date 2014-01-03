@@ -106,34 +106,116 @@ def get_xp_from_to_level(level_from, level_to):
 def get_power_level(level):
     return math.floor(100 - 99 * ((1 + 0.0536) / (1 + 0.0536 * level)))
 
-def get_base_health(class_type, level):
-    if class_type==1:
-        # WARRIORS
-        coefficient = 1.3
-    elif class_type==2:
-        # RANGERS
-        coefficient = 1.1
-    elif class_type==3:
-        # MAGES
-        coefficient = 1.0
-    elif class_type==4:
-        # ROGUES
-        coefficient = 1.2
+def get_max_xp(level):
+    xp = 1050 - 1000 / (0.05 * (level - 1) + 1)
+    return int(xp)
+
+
+def get_power(level):
+    power = 101 - 100 / (0.05 * (level - 1) + 1)
+    return int(power)
+
+
+def get_entity_base_health(entity):
+    level_health = 2 ** ((1 - (1 / (0.05 * (entity.level - 1) + 1))) * 3)
+
+    if entity.hostile_type == 0:
+        health = level_health * 2 * entity.max_hp_multiplier
     else:
-        return None
-    scaling = 100.0
-    return (scaling * (coefficient * 2**(3 * (level - 1)/(level + 19) + 1)))
+        power_health = 2 ** (entity.power_base * 0.25)
+        health = level_health * power_health * entity.max_hp_multiplier
 
-def get_player_race_str(race_id):
-    return constants.PLAYER_RACES[race_id]
+    if entity.class_type == 1:
+        health *= 1.30
+        if entity.specialization == 1:
+            health *= 1.25
+
+    elif entity.class_type == 2:
+        health *= 1.10
+
+    elif entity.class_type == 4:
+        health *= 1.20
+
+    return health
 
 
-def get_player_class_str(class_id):
-    return constants.PLAYER_CLASSES[class_id]
+def get_item_base_hp(level, rarity):
+    level_health = 2 ** ((1 - (1 / (0.05 * (float(level) - 1) + 1))) * 3)
+    rarity_health = 2 ** (float(rarity) * 0.25)
+    return level_health * rarity_health
+
+
+def get_item_hp(item):
+    if item.type not in (3, 4, 5, 6, 7):
+        return 0.0
+
+    type_multiplier = 0.5
+    if item.type == 4:
+        type_multiplier = 1.0
+
+    hp_mod = 8 * item.modifier % 0x15
+
+    if hp_mod >> 31 == 1:
+        hp_mod += 4294967296.0
+
+    mod_mult = (1.0 - (hp_mod / 20.0)) + 1.0
+
+    if item.material == 1:
+        mod_mult += 1.0
+
+    if item.material == 26:
+        mod_mult += 0.5
+
+    if item.material == 27:
+        mod_mult += 0.75
+
+    upgrade_lv = item.upgrade_count * 0.10
+    base_hp = get_item_base_hp(item.level + upgrade_lv, item.rarity)
+    return base_hp * 5.0 * type_multiplier * mod_mult
+
+
+def get_item_name(item):
+    name = []
+
+    if item.material in constants.MATERIAL_NAMES:
+        name.append(constants.MATERIAL_NAMES[item.material])
+
+    if item.type in constants.ITEM_NAMES:
+        name.append(constants.ITEM_NAMES[item.type])
+
+    if item.type == 1 and item.sub_type in constants.CONSUMABLE_NAMES:
+        name.append(constants.CONSUMABLE_NAMES[item.sub_type])
+
+    if item.type == 3 and item.sub_type in constants.WEAPON_NAMES:
+        name.append(constants.WEAPON_NAMES[item.sub_type])
+
+    if item.type == 19 and item.sub_type in constants.NPC_NAMES:
+        name.append(constants.NPC_NAMES[item.sub_type])
+
+    power = get_power(item.level)
+    name.append("+{power}".format(power=power))
+
+    itemname = ' '.join(name)
+    return itemname
+
+
+def get_consumable_heal(item):
+    return get_item_base_hp(item.level, item.rarity) * 200
+
+
+def get_entity_max_health(entity):
+    health = get_entity_base_health(entity)
+    health += get_item_hp(entity.equipment[6])
+    health += get_item_hp(entity.equipment[7])
+    health += get_item_hp(entity.equipment[2])
+    health += get_item_hp(entity.equipment[3])
+    health += get_item_hp(entity.equipment[4])
+    health += get_item_hp(entity.equipment[5])
+    return health
 
 
 def get_entity_type_level_str(entity_data):
-    return '%s L%s' % (get_player_class_str(entity_data.class_type), entity_data.level)
+    return '%s L%s %s' % (constants.CLASS_NAMES[entity_data.class_type], entity_data.level, constants.CLASS_SPECIALIZATIONS[entity_data.class_type][entity_data.specialization])
 
 
 def get_distance_2d(x1, y1, x2, y2):
@@ -164,9 +246,9 @@ def create_path(path):
         try:
             print '[INFO] Creating directory structure to %s' % path
             os.makedirs(path)
-            return True
         except OSError:
             print '[ERROR] Could not create directory structure to %s' % path
+            pass
     return False
 
 

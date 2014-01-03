@@ -16,7 +16,6 @@
 # along with cuwo.  If not, see <http://www.gnu.org/licenses/>.
 
 
-
 class CubModel(object):
     def __init__(self, reader=None):
         self.blocks = {}
@@ -34,7 +33,6 @@ class CubModel(object):
                     if r == 0 and g == 0 and b == 0:
                         continue
                     self.blocks[(x, y, z)] = (r, g, b)
-
 
     def write(self, writer):
         writer.write_uint32(self.x_size)
